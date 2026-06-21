@@ -13,6 +13,7 @@
     "inspect:genealogy": "tsx src/cli-inspect-genealogy.ts",
     "inspect:http-harvest": "tsx src/cli-http-harvest.ts",
     "benchmark:parallel-trees": "tsx src/cli-benchmark-parallel-trees.ts",
+    "benchmark:parallel-modules": "tsx src/cli-benchmark-parallel-modules.ts",
     "lint": "tsc --noEmit"
   },
   "dependencies": {

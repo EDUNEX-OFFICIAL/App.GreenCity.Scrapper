@@ -14,6 +14,8 @@
     "inspect:http-harvest": "tsx src/cli-http-harvest.ts",
     "benchmark:parallel-trees": "tsx src/cli-benchmark-parallel-trees.ts",
     "benchmark:parallel-modules": "tsx src/cli-benchmark-parallel-modules.ts",
+    "benchmark:concurrency": "tsx src/cli-benchmark-concurrency.ts",
+    "validation:genealogy": "tsx src/cli-validation-genealogy.ts",
     "lint": "tsc --noEmit"
   },
   "dependencies": {

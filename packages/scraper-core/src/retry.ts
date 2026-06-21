@@ -6,6 +6,7 @@ export interface RetryOptions {
   attempts?: number;
   baseDelayMs?: number;
   label?: string;
+  shouldRetry?: (err: unknown, attempt: number) => boolean;
 }
 
 export async function withRetry<T>(
@@ -23,6 +24,7 @@ export async function withRetry<T>(
     } catch (err) {
       lastErr = err;
       if (i >= attempts) break;
+      if (opts.shouldRetry && !opts.shouldRetry(err, i)) break;
       const delay = baseDelayMs * 2 ** (i - 1);
       log.warn(
         { label, attempt: i, attempts, delay, err: err instanceof Error ? err.message : String(err) },

@@ -135,7 +135,7 @@ export async function GET() {
     const totalBps = (geneMeta.totalBps as number) ?? 0;
     const processed = batchCompleted + batchFailed;
     const remaining = Math.max(0, totalBps - processed);
-    const workerCapacity = Number.parseInt(process.env.GENEALOGY_CONCURRENCY ?? '15', 10);
+    const workerCapacity = Number.parseInt(process.env.GENEALOGY_CONCURRENCY ?? '50', 10);
 
     const genealogyQueueActive = genealogyWorker.queue?.active ?? 0;
     const genealogyQueueWaiting = genealogyWorker.queue?.waiting ?? 0;

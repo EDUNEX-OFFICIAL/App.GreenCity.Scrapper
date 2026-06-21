@@ -29,7 +29,7 @@ export function loadConfig(): AppConfig {
     playwrightHeadless: (process.env.PLAYWRIGHT_HEADLESS ?? 'true') !== 'false',
     scraperConcurrency: Number.parseInt(process.env.SCRAPER_CONCURRENCY ?? '2', 10),
     scraperDelayMs: Number.parseInt(process.env.SCRAPER_DELAY_MS ?? '1500', 10),
-    genealogyConcurrency: Number.parseInt(process.env.GENEALOGY_CONCURRENCY ?? '15', 10),
+    genealogyConcurrency: Number.parseInt(process.env.GENEALOGY_CONCURRENCY ?? '50', 10),
     genealogyBpOrder: process.env.GENEALOGY_BP_ORDER ?? 'leaf_first',
     storageStateDir: process.env.STORAGE_STATE_DIR ?? './.data/sessions',
     failureHtmlDir: process.env.FAILURE_HTML_DIR ?? './.data/failures',

@@ -10,7 +10,7 @@ import { runBpHarvestJob } from './bp-harvest-runner.js';
 const log = createLogger('harvest-worker');
 
 export async function startHarvestWorker(): Promise<Worker<BpHarvestJobPayload>> {
-  const concurrency = Number.parseInt(process.env.GENEALOGY_CONCURRENCY ?? '15', 10);
+  const concurrency = Number.parseInt(process.env.GENEALOGY_CONCURRENCY ?? '50', 10);
 
   const worker = new Worker<BpHarvestJobPayload>(
     BP_HARVEST_QUEUE_NAME,

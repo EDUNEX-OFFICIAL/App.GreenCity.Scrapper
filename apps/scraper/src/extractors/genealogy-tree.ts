@@ -7,7 +7,7 @@ import {
   type GenealogyScrapeResult,
   type GenealogyTreeType,
 } from '@greencity/shared';
-import { fetchGenealogyViaHttp, gotoGenealogyTree } from '@greencity/scraper-core';
+import { fetchGenealogyViaHttp, gotoGenealogyTree, pageHasSoftPortalWarning } from '@greencity/scraper-core';
 
 const log = createLogger('genealogy-tree');
 
@@ -260,6 +260,10 @@ export async function scrapeGenealogyTree(
     await applyBinaryDateFilters(page);
   }
   await waitForOrgchart(page);
+  const pageHtml = await page.content().catch(() => '');
+  if (pageHasSoftPortalWarning(pageHtml)) {
+    log.debug({ treeType, rootBpCode }, 'Soft portal warning present — continuing if tree data found');
+  }
   const visible = await parseVisibleTreeNodes(page);
   const rootRef =
     visible.find((n) => bpCodesMatch(n.bpCode, rootBpCode)) ??

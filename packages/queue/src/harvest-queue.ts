@@ -1,6 +1,7 @@
 import { Queue, type JobsOptions } from 'bullmq';
 import type { BpHarvestJobPayload } from '@greencity/shared';
 import { getRedisConnection } from './index.js';
+import { jobEnqueueDelayMs } from './enqueue-stagger.js';
 
 export const BP_HARVEST_QUEUE_NAME = 'greencity-bp-harvest';
 
@@ -38,7 +39,7 @@ export async function enqueueBpHarvestJobs(
   for (let i = 0; i < bps.length; i += chunkSize) {
     const chunk = bps.slice(i, i + chunkSize);
     await q.addBulk(
-      chunk.map((bp) => ({
+      chunk.map((bp, chunkIndex) => ({
         name: 'bp_harvest',
         data: {
           moduleKey: 'bp_harvest' as const,
@@ -51,6 +52,7 @@ export async function enqueueBpHarvestJobs(
         },
         opts: {
           jobId: `bp_harvest-${batchRunId}-${bp.bpCode}`,
+          delay: jobEnqueueDelayMs(i + chunkIndex),
         },
       })),
     );

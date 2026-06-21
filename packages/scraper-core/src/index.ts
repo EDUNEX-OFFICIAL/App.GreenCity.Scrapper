@@ -11,6 +11,12 @@ export {
   shutdownAdminContext,
 } from './admin-context.js';
 export { withRetry, type RetryOptions } from './retry.js';
+export { withPortalRetry } from './portal-retry.js';
+export {
+  isTransientPortalError,
+  pageHasSoftPortalWarning,
+  isConfirmedBlankGenealogy,
+} from './portal-errors.js';
 export { navigateBpSidebar, gotoGenealogyTree, genealogyTreeUrl } from './navigation.js';
 export {
   GENEALOGY_NAV_TIMEOUT_MS,

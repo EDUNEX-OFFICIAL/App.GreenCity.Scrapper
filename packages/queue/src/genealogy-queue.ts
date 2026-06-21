@@ -1,6 +1,7 @@
 import { Queue, type JobsOptions } from 'bullmq';
 import type { GenealogyJobPayload } from '@greencity/shared';
 import { getRedisConnection } from './index.js';
+import { jobEnqueueDelayMs } from './enqueue-stagger.js';
 
 export const GENEALOGY_QUEUE_NAME = 'greencity-genealogy-scrape';
 
@@ -50,7 +51,7 @@ export async function enqueueGenealogyBpJobs(
   for (let i = 0; i < bps.length; i += chunkSize) {
     const chunk = bps.slice(i, i + chunkSize);
     await q.addBulk(
-      chunk.map((bp) => ({
+      chunk.map((bp, chunkIndex) => ({
         name: 'genealogy_bp',
         data: {
           moduleKey: 'genealogy_bp' as const,
@@ -62,6 +63,7 @@ export async function enqueueGenealogyBpJobs(
         },
         opts: {
           jobId: `genealogy_bp-${batchRunId}-${bp.bpCode}`,
+          delay: jobEnqueueDelayMs(i + chunkIndex),
         },
       })),
     );

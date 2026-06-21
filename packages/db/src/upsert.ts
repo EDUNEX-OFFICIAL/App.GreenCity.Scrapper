@@ -8,6 +8,8 @@ export interface UpsertRowsResult {
   total: number;
 }
 
+const UPSERT_BATCH_SIZE = 500;
+
 export async function upsertModuleRows(params: {
   moduleKey: string;
   portal: 'admin' | 'bp';
@@ -15,39 +17,61 @@ export async function upsertModuleRows(params: {
   scrapeRunId: string;
   rows: NormalizedRow[];
 }): Promise<UpsertRowsResult> {
+  if (params.rows.length === 0) {
+    return { inserted: 0, updated: 0, total: 0 };
+  }
+
   const prisma = getPrisma();
   let inserted = 0;
   let updated = 0;
+  const now = new Date();
+  const scope = {
+    moduleKey: params.moduleKey,
+    portal: params.portal,
+    bpCode: params.bpCode,
+  };
 
-  for (const row of params.rows) {
-    const rowHash = computeRowHash(row, {
-      moduleKey: params.moduleKey,
-      portal: params.portal,
-      bpCode: params.bpCode,
+  for (let offset = 0; offset < params.rows.length; offset += UPSERT_BATCH_SIZE) {
+    const chunk = params.rows.slice(offset, offset + UPSERT_BATCH_SIZE);
+    const prepared = chunk.map((row) => ({
+      row,
+      rowHash: computeRowHash(row, scope),
+    }));
+    const hashes = prepared.map((p) => p.rowHash);
+
+    const existing = await prisma.rawModuleRow.findMany({
+      where: { rowHash: { in: hashes } },
+      select: { rowHash: true },
     });
-    const existing = await prisma.rawModuleRow.findUnique({ where: { rowHash } });
-    if (existing) {
-      await prisma.rawModuleRow.update({
-        where: { rowHash },
-        data: {
-          lastSeenAt: new Date(),
-          scrapeRunId: params.scrapeRunId,
-          rowJson: row as Prisma.InputJsonValue,
-        },
-      });
-      updated++;
-    } else {
-      await prisma.rawModuleRow.create({
-        data: {
+    const existingSet = new Set(existing.map((e) => e.rowHash));
+
+    const toCreate = prepared.filter((p) => !existingSet.has(p.rowHash));
+    const toTouch = prepared.filter((p) => existingSet.has(p.rowHash));
+
+    if (toCreate.length > 0) {
+      const created = await prisma.rawModuleRow.createMany({
+        data: toCreate.map((p) => ({
           moduleKey: params.moduleKey,
           portal: params.portal,
           bpCode: params.bpCode ?? null,
-          rowJson: row as Prisma.InputJsonValue,
-          rowHash,
+          rowJson: p.row as Prisma.InputJsonValue,
+          rowHash: p.rowHash,
+          scrapeRunId: params.scrapeRunId,
+        })),
+        skipDuplicates: true,
+      });
+      inserted += created.count;
+    }
+
+    if (toTouch.length > 0) {
+      const touched = await prisma.rawModuleRow.updateMany({
+        where: { rowHash: { in: toTouch.map((p) => p.rowHash) } },
+        data: {
+          lastSeenAt: now,
           scrapeRunId: params.scrapeRunId,
         },
       });
-      inserted++;
+      updated += touched.count;
     }
   }
 

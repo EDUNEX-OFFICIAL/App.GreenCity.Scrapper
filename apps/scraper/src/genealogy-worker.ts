@@ -28,7 +28,7 @@ export async function startGenealogyWorker(): Promise<Worker<GenealogyJobPayload
     });
   }
 
-  const concurrency = Number.parseInt(process.env.GENEALOGY_CONCURRENCY ?? '15', 10);
+  const concurrency = Number.parseInt(process.env.GENEALOGY_CONCURRENCY ?? '50', 10);
 
   const worker = new Worker<GenealogyJobPayload>(
     GENEALOGY_QUEUE_NAME,

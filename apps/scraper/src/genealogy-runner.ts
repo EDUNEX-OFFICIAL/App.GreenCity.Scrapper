@@ -10,9 +10,11 @@ import {
 import {
   createBpModuleRegistry,
   genealogyMetrics,
+  isConfirmedBlankGenealogy,
   runBpModules,
   saveFailureHtml,
   SessionManager,
+  withPortalRetry,
 } from '@greencity/scraper-core';
 import { withBpPanel } from './session/panel.js';
 import { scrapeBothGenealogyTrees } from './extractors/genealogy-tree.js';
@@ -51,40 +53,48 @@ export async function runGenealogyBpJob(payload: GenealogyJobPayload): Promise<v
 
   try {
     await session.ensureDirs();
-    await withBpPanel(
-      session,
-      bpCode,
-      async (bpPage) => {
-        const [result] = await genealogyMetrics.time('navigation_ms', () =>
-          runBpModules(
-            bpPage,
-            { bpCode, bpName: payload.bpName, uid: payload.uid, scrapeRunId: run.id },
-            ['genealogy'],
-            moduleRegistry,
-          ),
-        { bpCode });
+    await withPortalRetry(
+      () =>
+        withBpPanel(
+          session,
+          bpCode,
+          async (bpPage) => {
+            const [result] = await genealogyMetrics.time('navigation_ms', () =>
+              runBpModules(
+                bpPage,
+                { bpCode, bpName: payload.bpName, uid: payload.uid, scrapeRunId: run.id },
+                ['genealogy'],
+                moduleRegistry,
+              ),
+            { bpCode });
 
-        const genealogy = result.genealogy;
-        if (!genealogy) throw new Error('Genealogy module returned no data');
+            const genealogy = result.genealogy;
+            if (!genealogy) throw new Error('Genealogy module returned no data');
 
-        await genealogyMetrics.time('db_upsert_ms', async () => {
-          await upsertGenealogyResults({
-            nodes: genealogy.nodes.map((node) => ({
-              bpCode: node.bpCode,
-              bpName: node.bpName ?? payload.bpName,
-              uid: payload.uid,
-              treeType: node.treeType,
-              modalData: node.modalData,
-              children: node.children,
-              scrapeRunId: run.id,
-            })),
-            edges: genealogy.edges.map((edge) => ({ ...edge, scrapeRunId: run.id })),
-          });
-        }, { bpCode });
-        nodesUpserted = genealogy.nodes.length;
-        edgesUpserted = genealogy.edges.length;
-      },
-      { uid: payload.uid, bpName: payload.bpName, password: payload.password },
+            await genealogyMetrics.time('db_upsert_ms', async () => {
+              await upsertGenealogyResults({
+                nodes: genealogy.nodes.map((node) => ({
+                  bpCode: node.bpCode,
+                  bpName: node.bpName ?? payload.bpName,
+                  uid: payload.uid,
+                  treeType: node.treeType,
+                  modalData: node.modalData,
+                  children: node.children,
+                  scrapeRunId: run.id,
+                })),
+                edges: genealogy.edges.map((edge) => ({ ...edge, scrapeRunId: run.id })),
+              });
+            }, { bpCode });
+            nodesUpserted = genealogy.nodes.length;
+            edgesUpserted = genealogy.edges.length;
+
+            if (isConfirmedBlankGenealogy(genealogy)) {
+              log.info({ bpCode }, 'Genealogy snapshot empty on portal — treating as valid blank BP');
+            }
+          },
+          { uid: payload.uid, bpName: payload.bpName, password: payload.password },
+        ),
+      `genealogy_bp:${bpCode}`,
     );
 
     await finishScrapeRun(run.id, {

@@ -1,0 +1,241 @@
+{
+  "moduleKey": "plot_list",
+  "url": "http://app.greencity.org.in/_admin/rawassets/PlotList.aspx",
+  "title": "Admin Dashboard New - Green City Muzaffarpur",
+  "template": "form-view",
+  "gridTables": [],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [],
+  "modals": [],
+  "detailLinks": [],
+  "formFields": [
+    {
+      "id": "ContentPlaceHolder1_ProjectMainDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$ProjectMainDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_ProjectMainDropDownList",
+      "value": "1010"
+    },
+    {
+      "id": "ContentPlaceHolder1_ProjectPhaseDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$ProjectPhaseDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_ProjectPhaseDropDownList",
+      "value": "0"
+    },
+    {
+      "id": "ContentPlaceHolder1_SearchTextBox",
+      "name": "ctl00$ContentPlaceHolder1$SearchTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_SearchTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_PlotNoDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$PlotNoDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_PlotNoDropDownList",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_Area1TextBox",
+      "name": "ctl00$ContentPlaceHolder1$Area1TextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_Area1TextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_PlotGroupDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$PlotGroupDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_PlotGroupDropDownList",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_SetupPointTextBox",
+      "name": "ctl00$ContentPlaceHolder1$SetupPointTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_SetupPointTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_SetupDimensionTextBox",
+      "name": "ctl00$ContentPlaceHolder1$SetupDimensionTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_SetupDimensionTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_SetupAreaTextBox",
+      "name": "ctl00$ContentPlaceHolder1$SetupAreaTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_SetupAreaTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_SetupRateTextBox",
+      "name": "ctl00$ContentPlaceHolder1$SetupRateTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_SetupRateTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_SetupPLCTextBox",
+      "name": "ctl00$ContentPlaceHolder1$SetupPLCTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_SetupPLCTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_SetupHoldingAmtTextBox",
+      "name": "ctl00$ContentPlaceHolder1$SetupHoldingAmtTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_SetupHoldingAmtTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_SetupDownPayAmtTextBox",
+      "name": "ctl00$ContentPlaceHolder1$SetupDownPayAmtTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_SetupDownPayAmtTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_SetupDurationMonthTextBox",
+      "name": "ctl00$ContentPlaceHolder1$SetupDurationMonthTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_SetupDurationMonthTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_SetupEMIAmtTextBox",
+      "name": "ctl00$ContentPlaceHolder1$SetupEMIAmtTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_SetupEMIAmtTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_SetupHalfYearAmtTextBox",
+      "name": "ctl00$ContentPlaceHolder1$SetupHalfYearAmtTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_SetupHalfYearAmtTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_SetupRemainAmtTextBox",
+      "name": "ctl00$ContentPlaceHolder1$SetupRemainAmtTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_SetupRemainAmtTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_SetupTotalAmtTextBox",
+      "name": "ctl00$ContentPlaceHolder1$SetupTotalAmtTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_SetupTotalAmtTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_PlotNameTextBox",
+      "name": "ctl00$ContentPlaceHolder1$PlotNameTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_PlotNameTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_PointTextBox",
+      "name": "ctl00$ContentPlaceHolder1$PointTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_PointTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_DimensionTextBox",
+      "name": "ctl00$ContentPlaceHolder1$DimensionTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_DimensionTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_AreaTextBox",
+      "name": "ctl00$ContentPlaceHolder1$AreaTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_AreaTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_RateTextBox",
+      "name": "ctl00$ContentPlaceHolder1$RateTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_RateTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_PLCTextBox",
+      "name": "ctl00$ContentPlaceHolder1$PLCTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_PLCTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_HoldingAmtTextBox",
+      "name": "ctl00$ContentPlaceHolder1$HoldingAmtTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_HoldingAmtTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_DownPayAmtTextBox",
+      "name": "ctl00$ContentPlaceHolder1$DownPayAmtTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_DownPayAmtTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_DurationMonthTextBox",
+      "name": "ctl00$ContentPlaceHolder1$DurationMonthTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_DurationMonthTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_EMIAmtTextBox",
+      "name": "ctl00$ContentPlaceHolder1$EMIAmtTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_EMIAmtTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_HalfYearAmtTextBox",
+      "name": "ctl00$ContentPlaceHolder1$HalfYearAmtTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_HalfYearAmtTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_RemainAmtTextBox",
+      "name": "ctl00$ContentPlaceHolder1$RemainAmtTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_RemainAmtTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_TotalAmtTextBox",
+      "name": "ctl00$ContentPlaceHolder1$TotalAmtTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_TotalAmtTextBox",
+      "value": ""
+    }
+  ],
+  "attachments": [
+    "http://app.greencity.org.in/_admin/sales/SaleAttachments.aspx"
+  ],
+  "suggestedSelectors": {
+    "grid": "table[id*=\"GridView1\"], table[id*=\"GridView\"], table[id*=\"grd\"]",
+    "pagingLabel": "[id*=\"lblPaging\"]"
+  },
+  "extractMode": "form",
+  "inspectedAt": "2026-06-20T19:31:59.267Z"
+}

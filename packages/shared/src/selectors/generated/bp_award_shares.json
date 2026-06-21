@@ -1,0 +1,38 @@
+{
+  "moduleKey": "bp_award_shares",
+  "url": "http://app.greencity.org.in/_admin/membermanagement/RewardAchievedShares.aspx",
+  "title": "Admin Dashboard New - Green City Muzaffarpur",
+  "template": "unknown",
+  "gridTables": [],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [],
+  "modals": [],
+  "detailLinks": [],
+  "formFields": [
+    {
+      "id": "ContentPlaceHolder1_PayoutDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$PayoutDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_PayoutDropDownList",
+      "value": "115"
+    },
+    {
+      "id": "ContentPlaceHolder1_CompanyDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$CompanyDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_CompanyDropDownList",
+      "value": "2"
+    }
+  ],
+  "attachments": [
+    "http://app.greencity.org.in/_admin/sales/SaleAttachments.aspx"
+  ],
+  "suggestedSelectors": {
+    "grid": "table[id*=\"GridView1\"], table[id*=\"GridView\"], table[id*=\"grd\"]",
+    "pagingLabel": "[id*=\"lblPaging\"]"
+  },
+  "extractMode": "grid",
+  "inspectedAt": "2026-06-20T19:30:40.040Z"
+}

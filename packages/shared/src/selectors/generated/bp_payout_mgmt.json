@@ -1,0 +1,40 @@
+{
+  "moduleKey": "bp_payout_mgmt",
+  "url": "http://app.greencity.org.in/_admin/membermanagement/PayoutGeneration.aspx",
+  "title": "Admin Dashboard New - Green City Muzaffarpur",
+  "template": "paginated-grid",
+  "gridTables": [
+    {
+      "id": "ContentPlaceHolder1_GridView1",
+      "rowCount": 54,
+      "headers": []
+    }
+  ],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [
+    "ContentPlaceHolder1_DateTextBox"
+  ],
+  "modals": [],
+  "detailLinks": [],
+  "formFields": [
+    {
+      "id": "ContentPlaceHolder1_DateTextBox",
+      "name": "ctl00$ContentPlaceHolder1$DateTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_DateTextBox",
+      "value": ""
+    }
+  ],
+  "attachments": [
+    "http://app.greencity.org.in/_admin/sales/SaleAttachments.aspx"
+  ],
+  "suggestedSelectors": {
+    "grid": "#ContentPlaceHolder1_GridView1",
+    "pagingLabel": "[id*=\"lblPaging\"]",
+    "searchButton": "input[type=\"submit\"][value*=\"Search\" i], input[id*=\"btnSearch\" i], input[value*=\"Show\" i], button:has-text(\"Search\")"
+  },
+  "extractMode": "grid",
+  "inspectedAt": "2026-06-20T19:30:13.710Z"
+}

@@ -1,0 +1,119 @@
+name: greencity-erp
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: greencity
+      POSTGRES_PASSWORD: greencity
+      POSTGRES_DB: greencity
+    ports:
+      - '5435:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U greencity']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - '6380:6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  scraper:
+    build:
+      context: .
+      dockerfile: apps/scraper/Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://greencity:greencity@postgres:5432/greencity
+      REDIS_URL: redis://redis:6379
+      ERP_BASE_URL: http://app.greencity.org.in
+      PLAYWRIGHT_HEADLESS: 'true'
+      SCRAPER_CONCURRENCY: 3
+      SCRAPER_DELAY_MS: 700
+      GENEALOGY_ENABLED: 'true'
+      STORAGE_STATE_DIR: /data/sessions
+      FAILURE_HTML_DIR: /data/failures
+    volumes:
+      - scraper_data:/data
+      - ./packages/shared/src/selectors/generated:/app/packages/shared/src/selectors/generated
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  genealogy-scraper:
+    build:
+      context: .
+      dockerfile: apps/scraper/Dockerfile
+    restart: unless-stopped
+    command: ['node', 'apps/scraper/dist/genealogy-index.js']
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://greencity:greencity@postgres:5432/greencity
+      REDIS_URL: redis://redis:6379
+      ERP_BASE_URL: http://app.greencity.org.in
+      PLAYWRIGHT_HEADLESS: 'true'
+      SCRAPER_CONCURRENCY: 1
+      GENEALOGY_CONCURRENCY: 25
+      SCRAPER_DELAY_MS: 200
+      GENEALOGY_BP_ORDER: leaf_first
+      GENEALOGY_AUTH_MODE: direct_login
+      SCRAPER_BROWSER_POOL: 'true'
+      SCRAPER_BLOCK_RESOURCES: 'true'
+      SCRAPER_ADMIN_CONTEXT: 'false'
+      BP_HARVEST_QUEUE: 'true'
+      GENEALOGY_ENABLED: 'true'
+      WORKER_ROLE: genealogy
+      # Set after inspect:genealogy discovers tree XHR endpoint
+      GENEALOGY_HTTP_TREE_URL: ''
+      GENEALOGY_HTTP_COOKIE: ''
+      STORAGE_STATE_DIR: /data/sessions
+      FAILURE_HTML_DIR: /data/failures
+    volumes:
+      - scraper_data:/data
+      - ./packages/shared/src/selectors/generated:/app/packages/shared/src/selectors/generated
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://greencity:greencity@postgres:5432/greencity
+      REDIS_URL: redis://redis:6379
+      PORT: 3010
+      GENEALOGY_CONCURRENCY: 25
+      BP_HARVEST_QUEUE: 'true'
+    ports:
+      - '3010:3010'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  scraper_data:

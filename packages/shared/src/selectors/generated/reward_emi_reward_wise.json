@@ -1,0 +1,59 @@
+{
+  "moduleKey": "reward_emi_reward_wise",
+  "url": "http://app.greencity.org.in/_admin/memberpayout/NEFTListEMIReward.aspx",
+  "title": "Admin Dashboard New - Green City Muzaffarpur",
+  "template": "unknown",
+  "gridTables": [],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [],
+  "modals": [],
+  "detailLinks": [],
+  "formFields": [
+    {
+      "id": "ContentPlaceHolder1_RewardAcheivedDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$RewardAcheivedDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_RewardAcheivedDropDownList",
+      "value": "115"
+    },
+    {
+      "id": "ContentPlaceHolder1_EMIDateDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$EMIDateDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_EMIDateDropDownList",
+      "value": "115"
+    },
+    {
+      "id": "ContentPlaceHolder1_RewardDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$RewardDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_RewardDropDownList",
+      "value": ""
+    },
+    {
+      "id": "printB",
+      "name": "printB",
+      "type": "button",
+      "label": "printB",
+      "value": "PRINT"
+    },
+    {
+      "id": "printd",
+      "name": "printB",
+      "type": "button",
+      "label": "printd",
+      "value": "DOWNLOAD"
+    }
+  ],
+  "attachments": [
+    "http://app.greencity.org.in/_admin/sales/SaleAttachments.aspx"
+  ],
+  "suggestedSelectors": {
+    "grid": "table[id*=\"GridView1\"], table[id*=\"GridView\"], table[id*=\"grd\"]",
+    "pagingLabel": "[id*=\"lblPaging\"]"
+  },
+  "extractMode": "grid",
+  "inspectedAt": "2026-06-20T19:30:59.448Z"
+}

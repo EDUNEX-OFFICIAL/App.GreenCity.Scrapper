@@ -1,0 +1,45 @@
+{
+  "moduleKey": "pin_generator_transfer",
+  "url": "http://app.greencity.org.in/_admin/joiningpin/AdminPinGenerateNTransfer.aspx",
+  "title": "Admin Dashboard New - Green City Muzaffarpur",
+  "template": "unknown",
+  "gridTables": [],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [],
+  "modals": [],
+  "detailLinks": [],
+  "formFields": [
+    {
+      "id": "ContentPlaceHolder1_MemberIDTextBox",
+      "name": "ctl00$ContentPlaceHolder1$MemberIDTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_MemberIDTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_MemberNameTextBox",
+      "name": "ctl00$ContentPlaceHolder1$MemberNameTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_MemberNameTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_NoofPINTextBox",
+      "name": "ctl00$ContentPlaceHolder1$NoofPINTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_NoofPINTextBox",
+      "value": ""
+    }
+  ],
+  "attachments": [
+    "http://app.greencity.org.in/_admin/sales/SaleAttachments.aspx"
+  ],
+  "suggestedSelectors": {
+    "grid": "table[id*=\"GridView1\"], table[id*=\"GridView\"], table[id*=\"grd\"]",
+    "pagingLabel": "[id*=\"lblPaging\"]"
+  },
+  "extractMode": "grid",
+  "inspectedAt": "2026-06-20T19:31:34.055Z"
+}

@@ -1,0 +1,81 @@
+{
+  "moduleKey": "sales_performance_report",
+  "url": "http://app.greencity.org.in/_admin/salesreport/SalesPerformanceReport.aspx",
+  "title": "Admin Dashboard New - Green City Muzaffarpur",
+  "template": "form-view",
+  "gridTables": [],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [],
+  "modals": [],
+  "detailLinks": [],
+  "formFields": [
+    {
+      "id": "ContentPlaceHolder1_ProjectMainDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$ProjectMainDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_ProjectMainDropDownList",
+      "value": "1010"
+    },
+    {
+      "id": "ContentPlaceHolder1_ProjectPhaseDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$ProjectPhaseDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_ProjectPhaseDropDownList",
+      "value": "0"
+    },
+    {
+      "id": "ContentPlaceHolder1_PlotGroupDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$PlotGroupDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_PlotGroupDropDownList",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_SearchTextBox",
+      "name": "ctl00$ContentPlaceHolder1$SearchTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_SearchTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_PresentRegNoTextBox",
+      "name": "ctl00$ContentPlaceHolder1$PresentRegNoTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_PresentRegNoTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_PerfectRegNoTextBox",
+      "name": "ctl00$ContentPlaceHolder1$PerfectRegNoTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_PerfectRegNoTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_RegistryStatusTextBox",
+      "name": "ctl00$ContentPlaceHolder1$RegistryStatusTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_RegistryStatusTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_MotationStatusTextBox",
+      "name": "ctl00$ContentPlaceHolder1$MotationStatusTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_MotationStatusTextBox",
+      "value": ""
+    }
+  ],
+  "attachments": [
+    "http://app.greencity.org.in/_admin/sales/SaleAttachments.aspx",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$DownloadLinkButton2','')"
+  ],
+  "suggestedSelectors": {
+    "grid": "table[id*=\"GridView1\"], table[id*=\"GridView\"], table[id*=\"grd\"]",
+    "pagingLabel": "[id*=\"lblPaging\"]"
+  },
+  "extractMode": "form",
+  "inspectedAt": "2026-06-20T19:32:30.300Z"
+}

@@ -1,0 +1,95 @@
+{
+  "moduleKey": "sale_report_transactions",
+  "url": "http://app.greencity.org.in/_admin/salesreport/SalesTransactions_Sheet.aspx",
+  "title": "Admin Dashboard New - Green City Muzaffarpur",
+  "template": "paginated-grid",
+  "gridTables": [
+    {
+      "id": "ContentPlaceHolder1_GridView1",
+      "rowCount": 38,
+      "headers": [
+        "SrNo",
+        "Sale ID",
+        "Receipt No.",
+        "Receipt Date",
+        "Branch",
+        "Company",
+        "Project",
+        "Phase",
+        "Plot",
+        "Name",
+        "Bank Name",
+        "Mode",
+        "Ch./ Trans. No.",
+        "Ch./ Trans. Date",
+        "Description",
+        "Apply",
+        "Sale Status",
+        "Payment Status",
+        "Amount"
+      ]
+    }
+  ],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [
+    "ContentPlaceHolder1_MonthDropDownList"
+  ],
+  "modals": [],
+  "detailLinks": [],
+  "formFields": [
+    {
+      "id": "ContentPlaceHolder1_FinYearDropDownList1",
+      "name": "ctl00$ContentPlaceHolder1$FinYearDropDownList1",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_FinYearDropDownList1",
+      "value": "2026"
+    },
+    {
+      "id": "ContentPlaceHolder1_MonthDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$MonthDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_MonthDropDownList",
+      "value": "6"
+    },
+    {
+      "id": "ContentPlaceHolder1_ProjectDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$ProjectDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_ProjectDropDownList",
+      "value": "0"
+    },
+    {
+      "id": "ContentPlaceHolder1_BranchDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$BranchDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_BranchDropDownList",
+      "value": "0"
+    },
+    {
+      "id": "ContentPlaceHolder1_SaleStatusDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$SaleStatusDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_SaleStatusDropDownList",
+      "value": "BOOKED"
+    },
+    {
+      "id": "ContentPlaceHolder1_EarningStatusDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$EarningStatusDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_EarningStatusDropDownList",
+      "value": "1"
+    }
+  ],
+  "attachments": [
+    "http://app.greencity.org.in/_admin/sales/SaleAttachments.aspx"
+  ],
+  "suggestedSelectors": {
+    "grid": "#ContentPlaceHolder1_GridView1",
+    "pagingLabel": "[id*=\"lblPaging\"]",
+    "searchButton": "input[type=\"submit\"][value*=\"Search\" i], input[id*=\"btnSearch\" i], input[value*=\"Show\" i], button:has-text(\"Search\")"
+  },
+  "extractMode": "grid",
+  "inspectedAt": "2026-06-20T19:32:27.528Z"
+}

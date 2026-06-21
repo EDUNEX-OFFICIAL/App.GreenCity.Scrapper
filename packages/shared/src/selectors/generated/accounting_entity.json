@@ -1,0 +1,100 @@
+{
+  "moduleKey": "accounting_entity",
+  "url": "http://app.greencity.org.in/_admin/findereditor/AccEntityEditor.aspx",
+  "title": "Admin Dashboard New - Green City Muzaffarpur",
+  "template": "paginated-grid",
+  "gridTables": [
+    {
+      "id": "ContentPlaceHolder1_GridView1",
+      "rowCount": 23,
+      "headers": []
+    }
+  ],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [],
+  "modals": [],
+  "detailLinks": [],
+  "formFields": [
+    {
+      "id": "ContentPlaceHolder1_SearchTextBox",
+      "name": "ctl00$ContentPlaceHolder1$SearchTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_SearchTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_MainHeadDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$MainHeadDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_MainHeadDropDownList",
+      "value": "0"
+    },
+    {
+      "id": "ContentPlaceHolder1_SubHeadDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$SubHeadDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_SubHeadDropDownList",
+      "value": "0"
+    },
+    {
+      "id": "ContentPlaceHolder1_CompanyDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$CompanyDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_CompanyDropDownList",
+      "value": "4"
+    },
+    {
+      "id": "ContentPlaceHolder1_ProjectDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$ProjectDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_ProjectDropDownList",
+      "value": "0"
+    },
+    {
+      "id": "ContentPlaceHolder1_NameTextBox",
+      "name": "ctl00$ContentPlaceHolder1$NameTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_NameTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_ContactNoTextBox",
+      "name": "ctl00$ContentPlaceHolder1$ContactNoTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_ContactNoTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_EmailTextBox",
+      "name": "ctl00$ContentPlaceHolder1$EmailTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_EmailTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_AddressTextBox",
+      "name": "ctl00$ContentPlaceHolder1$AddressTextBox",
+      "type": "textarea",
+      "label": "ContentPlaceHolder1_AddressTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_DescriptionTextBox",
+      "name": "ctl00$ContentPlaceHolder1$DescriptionTextBox",
+      "type": "textarea",
+      "label": "ContentPlaceHolder1_DescriptionTextBox",
+      "value": ""
+    }
+  ],
+  "attachments": [
+    "http://app.greencity.org.in/_admin/sales/SaleAttachments.aspx"
+  ],
+  "suggestedSelectors": {
+    "grid": "#ContentPlaceHolder1_GridView1",
+    "pagingLabel": "[id*=\"lblPaging\"]"
+  },
+  "extractMode": "grid",
+  "inspectedAt": "2026-06-20T19:31:22.489Z"
+}

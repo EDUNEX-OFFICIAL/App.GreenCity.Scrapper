@@ -1,0 +1,9 @@
+node_modules/
+.pnpm-store/
+.turbo/
+dist/
+.next/
+.data/
+.env
+*.log
+coverage/

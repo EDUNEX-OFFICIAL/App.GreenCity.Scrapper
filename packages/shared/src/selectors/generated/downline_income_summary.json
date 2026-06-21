@@ -1,0 +1,52 @@
+{
+  "moduleKey": "downline_income_summary",
+  "url": "http://app.greencity.org.in/_admin/memberpayout/MemberDownlineIncomeSummary.aspx",
+  "title": "Admin Dashboard New - Green City Muzaffarpur",
+  "template": "unknown",
+  "gridTables": [],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [],
+  "modals": [],
+  "detailLinks": [],
+  "formFields": [
+    {
+      "id": "ContentPlaceHolder1_MemberIDTextBox",
+      "name": "ctl00$ContentPlaceHolder1$MemberIDTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_MemberIDTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_DropDownList1",
+      "name": "ctl00$ContentPlaceHolder1$DropDownList1",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_DropDownList1",
+      "value": "115"
+    },
+    {
+      "id": "ContentPlaceHolder1_SearchTextBox",
+      "name": "ctl00$ContentPlaceHolder1$SearchTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_SearchTextBox",
+      "value": ""
+    },
+    {
+      "id": "printB",
+      "name": "printB",
+      "type": "button",
+      "label": "printB",
+      "value": "Print"
+    }
+  ],
+  "attachments": [
+    "http://app.greencity.org.in/_admin/sales/SaleAttachments.aspx"
+  ],
+  "suggestedSelectors": {
+    "grid": "table[id*=\"GridView1\"], table[id*=\"GridView\"], table[id*=\"grd\"]",
+    "pagingLabel": "[id*=\"lblPaging\"]"
+  },
+  "extractMode": "grid",
+  "inspectedAt": "2026-06-20T19:30:48.416Z"
+}

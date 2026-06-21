@@ -1,0 +1,67 @@
+{
+  "moduleKey": "full_monthly_summary",
+  "url": "http://app.greencity.org.in/_admin/admin/FullMonthlySummary.aspx",
+  "title": "Admin Dashboard New - Green City Muzaffarpur",
+  "template": "report-filter",
+  "gridTables": [
+    {
+      "id": "ContentPlaceHolder1_AccountsGridView",
+      "rowCount": 26,
+      "headers": [
+        "SrNo",
+        "Main Head",
+        "Sub Head",
+        "Total Credit",
+        "Total Debit"
+      ]
+    }
+  ],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [
+    "ContentPlaceHolder1_FinancialMonthDropDownList"
+  ],
+  "modals": [],
+  "detailLinks": [],
+  "formFields": [
+    {
+      "id": "ContentPlaceHolder1_CompanyDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$CompanyDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_CompanyDropDownList",
+      "value": "0"
+    },
+    {
+      "id": "ContentPlaceHolder1_BranchDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$BranchDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_BranchDropDownList",
+      "value": "0"
+    },
+    {
+      "id": "ContentPlaceHolder1_FinYearDropDownList1",
+      "name": "ctl00$ContentPlaceHolder1$FinYearDropDownList1",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_FinYearDropDownList1",
+      "value": "2026"
+    },
+    {
+      "id": "ContentPlaceHolder1_FinancialMonthDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$FinancialMonthDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_FinancialMonthDropDownList",
+      "value": "6-2026"
+    }
+  ],
+  "attachments": [
+    "http://app.greencity.org.in/_admin/sales/SaleAttachments.aspx"
+  ],
+  "suggestedSelectors": {
+    "grid": "#ContentPlaceHolder1_AccountsGridView",
+    "pagingLabel": "[id*=\"lblPaging\"]",
+    "searchButton": "input[type=\"submit\"][value*=\"Search\" i], input[id*=\"btnSearch\" i], input[value*=\"Show\" i], button:has-text(\"Search\")"
+  },
+  "extractMode": "report",
+  "inspectedAt": "2026-06-20T19:29:53.567Z"
+}

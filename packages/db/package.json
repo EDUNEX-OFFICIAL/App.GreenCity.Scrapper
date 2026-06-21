@@ -1,0 +1,27 @@
+{
+  "name": "@greencity/db",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "prisma generate && tsc",
+    "lint": "tsc --noEmit",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.8.2",
+    "@greencity/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "prisma": "^6.8.2",
+    "typescript": "^5.8.3"
+  }
+}

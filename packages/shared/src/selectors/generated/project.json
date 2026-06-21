@@ -1,0 +1,75 @@
+{
+  "moduleKey": "project",
+  "url": "http://app.greencity.org.in/_admin/master/ProjectMain.aspx",
+  "title": "Admin Dashboard New - Green City Muzaffarpur",
+  "template": "paginated-grid",
+  "gridTables": [
+    {
+      "id": "ContentPlaceHolder1_GridView1",
+      "rowCount": 5,
+      "headers": [
+        "SrNo",
+        "Company",
+        "Name",
+        "Address",
+        "Start Date",
+        "Options"
+      ]
+    }
+  ],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [
+    "ContentPlaceHolder1_StartDateTextBox"
+  ],
+  "modals": [],
+  "detailLinks": [],
+  "formFields": [
+    {
+      "id": "ContentPlaceHolder1_SearchTextBox",
+      "name": "ctl00$ContentPlaceHolder1$SearchTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_SearchTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_CompanyIDDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$CompanyIDDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_CompanyIDDropDownList",
+      "value": "4"
+    },
+    {
+      "id": "ContentPlaceHolder1_NameTextBox",
+      "name": "ctl00$ContentPlaceHolder1$NameTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_NameTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_StartDateTextBox",
+      "name": "ctl00$ContentPlaceHolder1$StartDateTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_StartDateTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_addressTextBox",
+      "name": "ctl00$ContentPlaceHolder1$addressTextBox",
+      "type": "textarea",
+      "label": "ContentPlaceHolder1_addressTextBox",
+      "value": ""
+    }
+  ],
+  "attachments": [
+    "http://app.greencity.org.in/_admin/sales/SaleAttachments.aspx"
+  ],
+  "suggestedSelectors": {
+    "grid": "#ContentPlaceHolder1_GridView1",
+    "pagingLabel": "[id*=\"lblPaging\"]",
+    "searchButton": "input[type=\"submit\"][value*=\"Search\" i], input[id*=\"btnSearch\" i], input[value*=\"Show\" i], button:has-text(\"Search\")"
+  },
+  "extractMode": "grid",
+  "inspectedAt": "2026-06-20T19:31:45.138Z"
+}

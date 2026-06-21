@@ -1,0 +1,117 @@
+{
+  "moduleKey": "project_phase",
+  "url": "http://app.greencity.org.in/_admin/master/ProjectPhase.aspx",
+  "title": "Admin Dashboard New - Green City Muzaffarpur",
+  "template": "paginated-grid",
+  "gridTables": [
+    {
+      "id": "ContentPlaceHolder1_GridView1",
+      "rowCount": 2,
+      "headers": [
+        "Options",
+        "MAP",
+        "SrNo",
+        "Project",
+        "Phase",
+        "Address",
+        "Start Date",
+        "Main Road Size",
+        "Link Road Size",
+        "Map(W)",
+        "Map(H)"
+      ]
+    }
+  ],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [
+    "ContentPlaceHolder1_StartDateTextBox"
+  ],
+  "modals": [],
+  "detailLinks": [
+    "http://app.greencity.org.in/PlotMap.aspx?id=13015"
+  ],
+  "formFields": [
+    {
+      "id": "ContentPlaceHolder1_SearchProjectMainDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$SearchProjectMainDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_SearchProjectMainDropDownList",
+      "value": "1010"
+    },
+    {
+      "id": "ContentPlaceHolder1_SearchTextBox",
+      "name": "ctl00$ContentPlaceHolder1$SearchTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_SearchTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_ProjectMainDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$ProjectMainDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_ProjectMainDropDownList",
+      "value": "1015"
+    },
+    {
+      "id": "ContentPlaceHolder1_NameTextBox",
+      "name": "ctl00$ContentPlaceHolder1$NameTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_NameTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_StartDateTextBox",
+      "name": "ctl00$ContentPlaceHolder1$StartDateTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_StartDateTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_roadsizeTextBox",
+      "name": "ctl00$ContentPlaceHolder1$roadsizeTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_roadsizeTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_sideroadTextBox",
+      "name": "ctl00$ContentPlaceHolder1$sideroadTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_sideroadTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_mapwTextBox3",
+      "name": "ctl00$ContentPlaceHolder1$mapwTextBox3",
+      "type": "text",
+      "label": "ContentPlaceHolder1_mapwTextBox3",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_mapHTextBox1",
+      "name": "ctl00$ContentPlaceHolder1$mapHTextBox1",
+      "type": "text",
+      "label": "ContentPlaceHolder1_mapHTextBox1",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_addressTextBox",
+      "name": "ctl00$ContentPlaceHolder1$addressTextBox",
+      "type": "textarea",
+      "label": "ContentPlaceHolder1_addressTextBox",
+      "value": ""
+    }
+  ],
+  "attachments": [
+    "http://app.greencity.org.in/_admin/sales/SaleAttachments.aspx"
+  ],
+  "suggestedSelectors": {
+    "grid": "#ContentPlaceHolder1_GridView1",
+    "pagingLabel": "[id*=\"lblPaging\"]",
+    "searchButton": "input[type=\"submit\"][value*=\"Search\" i], input[id*=\"btnSearch\" i], input[value*=\"Show\" i], button:has-text(\"Search\")"
+  },
+  "extractMode": "grid",
+  "inspectedAt": "2026-06-20T19:31:42.342Z"
+}

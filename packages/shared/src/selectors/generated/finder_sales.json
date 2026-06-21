@@ -1,0 +1,334 @@
+{
+  "moduleKey": "finder_sales",
+  "url": "http://app.greencity.org.in/_admin/findereditor/SaleListEditor.aspx",
+  "title": "Admin Dashboard New - Green City Muzaffarpur",
+  "template": "paginated-grid",
+  "gridTables": [
+    {
+      "id": "ContentPlaceHolder1_GridView1",
+      "rowCount": 25,
+      "headers": []
+    }
+  ],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [
+    "ContentPlaceHolder1_RegistryDateTextBox",
+    "ContentPlaceHolder1_ApplyDateTextBox",
+    "ContentPlaceHolder1_MonthDropDownList"
+  ],
+  "modals": [],
+  "detailLinks": [],
+  "formFields": [
+    {
+      "id": "ContentPlaceHolder1_SearchTextBox",
+      "name": "ctl00$ContentPlaceHolder1$SearchTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_SearchTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_BranchDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$BranchDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_BranchDropDownList",
+      "value": "3"
+    },
+    {
+      "id": "ContentPlaceHolder1_CompanyDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$CompanyDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_CompanyDropDownList",
+      "value": "4"
+    },
+    {
+      "id": "ContentPlaceHolder1_ProjectMainDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$ProjectMainDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_ProjectMainDropDownList",
+      "value": "1015"
+    },
+    {
+      "id": "ContentPlaceHolder1_ProjectDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$ProjectDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_ProjectDropDownList",
+      "value": "0"
+    },
+    {
+      "id": "ContentPlaceHolder1_PlotGroupDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$PlotGroupDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_PlotGroupDropDownList",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_PlotDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$PlotDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_PlotDropDownList",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_BookingPackDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$BookingPackDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_BookingPackDropDownList",
+      "value": "1"
+    },
+    {
+      "id": "ContentPlaceHolder1_AreaTextBox",
+      "name": "ctl00$ContentPlaceHolder1$AreaTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_AreaTextBox",
+      "value": "0"
+    },
+    {
+      "id": "ContentPlaceHolder1_RateTextBox",
+      "name": "ctl00$ContentPlaceHolder1$RateTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_RateTextBox",
+      "value": "0"
+    },
+    {
+      "id": "ContentPlaceHolder1_PLCTextBox",
+      "name": "ctl00$ContentPlaceHolder1$PLCTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_PLCTextBox",
+      "value": "0"
+    },
+    {
+      "id": "ContentPlaceHolder1_DownpayTextBox",
+      "name": "ctl00$ContentPlaceHolder1$DownpayTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_DownpayTextBox",
+      "value": "0"
+    },
+    {
+      "id": "ContentPlaceHolder1_NoofEMITextBox",
+      "name": "ctl00$ContentPlaceHolder1$NoofEMITextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_NoofEMITextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_EMIAmtTextBox",
+      "name": "ctl00$ContentPlaceHolder1$EMIAmtTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_EMIAmtTextBox",
+      "value": "0"
+    },
+    {
+      "id": "ContentPlaceHolder1_HalfYearlyTextBox",
+      "name": "ctl00$ContentPlaceHolder1$HalfYearlyTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_HalfYearlyTextBox",
+      "value": "0"
+    },
+    {
+      "id": "ContentPlaceHolder1_RemAmtTextBox",
+      "name": "ctl00$ContentPlaceHolder1$RemAmtTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_RemAmtTextBox",
+      "value": "0"
+    },
+    {
+      "id": "ContentPlaceHolder1_TotalAmtTextBox",
+      "name": "ctl00$ContentPlaceHolder1$TotalAmtTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_TotalAmtTextBox",
+      "value": "0"
+    },
+    {
+      "id": "ContentPlaceHolder1_RegistryCheckBox",
+      "name": "ctl00$ContentPlaceHolder1$RegistryCheckBox",
+      "type": "checkbox",
+      "label": "",
+      "value": "on"
+    },
+    {
+      "id": "ContentPlaceHolder1_RegistryDateTextBox",
+      "name": "ctl00$ContentPlaceHolder1$RegistryDateTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_RegistryDateTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_ApplyDateTextBox",
+      "name": "ctl00$ContentPlaceHolder1$ApplyDateTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_ApplyDateTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_MonthDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$MonthDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_MonthDropDownList",
+      "value": "21/06/2026"
+    },
+    {
+      "id": "ContentPlaceHolder1_StatusDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$StatusDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_StatusDropDownList",
+      "value": "BOOKED"
+    },
+    {
+      "id": "ContentPlaceHolder1_NameTextBox",
+      "name": "ctl00$ContentPlaceHolder1$NameTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_NameTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_FNameTextBox",
+      "name": "ctl00$ContentPlaceHolder1$FNameTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_FNameTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_DOBTextBox",
+      "name": "ctl00$ContentPlaceHolder1$DOBTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_DOBTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_PANTextBox",
+      "name": "ctl00$ContentPlaceHolder1$PANTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_PANTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_AdhaarTextBox",
+      "name": "ctl00$ContentPlaceHolder1$AdhaarTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_AdhaarTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_NomineeTextBox",
+      "name": "ctl00$ContentPlaceHolder1$NomineeTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_NomineeTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_RelationTextBox",
+      "name": "ctl00$ContentPlaceHolder1$RelationTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_RelationTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_ContactNoTextBox",
+      "name": "ctl00$ContentPlaceHolder1$ContactNoTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_ContactNoTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_EmailTextBox",
+      "name": "ctl00$ContentPlaceHolder1$EmailTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_EmailTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_StateDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$StateDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_StateDropDownList",
+      "value": "Bihar"
+    },
+    {
+      "id": "ContentPlaceHolder1_PinCodeTextBox",
+      "name": "ctl00$ContentPlaceHolder1$PinCodeTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_PinCodeTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_PoTextBox",
+      "name": "ctl00$ContentPlaceHolder1$PoTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_PoTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_PsTextBox",
+      "name": "ctl00$ContentPlaceHolder1$PsTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_PsTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_CityTextBox",
+      "name": "ctl00$ContentPlaceHolder1$CityTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_CityTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_AddressTextBox",
+      "name": "ctl00$ContentPlaceHolder1$AddressTextBox",
+      "type": "textarea",
+      "label": "ContentPlaceHolder1_AddressTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_DescriptionTextBox",
+      "name": "ctl00$ContentPlaceHolder1$DescriptionTextBox",
+      "type": "textarea",
+      "label": "ContentPlaceHolder1_DescriptionTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_MemberCodeTextBox",
+      "name": "ctl00$ContentPlaceHolder1$MemberCodeTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_MemberCodeTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_MemberNameTextBox",
+      "name": "ctl00$ContentPlaceHolder1$MemberNameTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_MemberNameTextBox",
+      "value": ""
+    }
+  ],
+  "attachments": [
+    "http://app.greencity.org.in/_admin/sales/SaleAttachments.aspx",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl03$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl04$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl05$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl06$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl07$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl08$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl09$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl10$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl11$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl12$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl13$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl14$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl15$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl16$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl17$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl18$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl19$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl20$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl21$AttachmentsLinkButton','')"
+  ],
+  "suggestedSelectors": {
+    "grid": "#ContentPlaceHolder1_GridView1",
+    "pagingLabel": "[id*=\"lblPaging\"]",
+    "searchButton": "input[type=\"submit\"][value*=\"Search\" i], input[id*=\"btnSearch\" i], input[value*=\"Show\" i], button:has-text(\"Search\")"
+  },
+  "extractMode": "grid",
+  "inspectedAt": "2026-06-20T19:31:28.507Z"
+}

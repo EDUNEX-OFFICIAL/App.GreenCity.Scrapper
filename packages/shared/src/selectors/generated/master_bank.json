@@ -1,0 +1,113 @@
+{
+  "moduleKey": "master_bank",
+  "url": "http://app.greencity.org.in/_admin/master/BankDetails.aspx",
+  "title": "Admin Dashboard New - Green City Muzaffarpur",
+  "template": "simple-grid",
+  "gridTables": [
+    {
+      "id": "ContentPlaceHolder1_GridView1",
+      "rowCount": 7,
+      "headers": [
+        "SrNo",
+        "Company",
+        "Project",
+        "Name",
+        "Acc No.",
+        "Acc. Type",
+        "IFSC",
+        "UPI",
+        "Contact No",
+        "Email ID",
+        "Address",
+        "Options"
+      ]
+    }
+  ],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [],
+  "modals": [],
+  "detailLinks": [],
+  "formFields": [
+    {
+      "id": "ContentPlaceHolder1_SearchTextBox",
+      "name": "ctl00$ContentPlaceHolder1$SearchTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_SearchTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_ProjectMainIDDropDownList1",
+      "name": "ctl00$ContentPlaceHolder1$ProjectMainIDDropDownList1",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_ProjectMainIDDropDownList1",
+      "value": "1010"
+    },
+    {
+      "id": "ContentPlaceHolder1_AccTypeDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$AccTypeDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_AccTypeDropDownList",
+      "value": "SAVING"
+    },
+    {
+      "id": "ContentPlaceHolder1_BankNameTextBox",
+      "name": "ctl00$ContentPlaceHolder1$BankNameTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_BankNameTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_UPITextBox",
+      "name": "ctl00$ContentPlaceHolder1$UPITextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_UPITextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_AccountNoTextBox",
+      "name": "ctl00$ContentPlaceHolder1$AccountNoTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_AccountNoTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_IFSCCodeTextBox",
+      "name": "ctl00$ContentPlaceHolder1$IFSCCodeTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_IFSCCodeTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_ContactNoTextBox",
+      "name": "ctl00$ContentPlaceHolder1$ContactNoTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_ContactNoTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_EmailIDTextBox",
+      "name": "ctl00$ContentPlaceHolder1$EmailIDTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_EmailIDTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_AddressTextBox",
+      "name": "ctl00$ContentPlaceHolder1$AddressTextBox",
+      "type": "textarea",
+      "label": "ContentPlaceHolder1_AddressTextBox",
+      "value": ""
+    }
+  ],
+  "attachments": [
+    "http://app.greencity.org.in/_admin/sales/SaleAttachments.aspx"
+  ],
+  "suggestedSelectors": {
+    "grid": "#ContentPlaceHolder1_GridView1",
+    "pagingLabel": "[id*=\"lblPaging\"]"
+  },
+  "extractMode": "grid",
+  "inspectedAt": "2026-06-20T19:28:16.762Z"
+}

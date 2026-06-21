@@ -1,0 +1,45 @@
+{
+  "moduleKey": "cash_ledger",
+  "url": "http://app.greencity.org.in/_admin/banking/CashLedger.aspx",
+  "title": "Admin Dashboard New - Green City Muzaffarpur",
+  "template": "unknown",
+  "gridTables": [],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [],
+  "modals": [],
+  "detailLinks": [],
+  "formFields": [
+    {
+      "id": "ContentPlaceHolder1_DropDownList1",
+      "name": "ctl00$ContentPlaceHolder1$DropDownList1",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_DropDownList1",
+      "value": "Biharsharif"
+    },
+    {
+      "id": "ContentPlaceHolder1_StartTextBox",
+      "name": "ctl00$ContentPlaceHolder1$StartTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_StartTextBox",
+      "value": "22/05/2026"
+    },
+    {
+      "id": "ContentPlaceHolder1_EndTextBox",
+      "name": "ctl00$ContentPlaceHolder1$EndTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_EndTextBox",
+      "value": "21/06/2026"
+    }
+  ],
+  "attachments": [
+    "http://app.greencity.org.in/_admin/sales/SaleAttachments.aspx"
+  ],
+  "suggestedSelectors": {
+    "grid": "table[id*=\"GridView1\"], table[id*=\"GridView\"], table[id*=\"grd\"]",
+    "pagingLabel": "[id*=\"lblPaging\"]"
+  },
+  "extractMode": "grid",
+  "inspectedAt": "2026-06-20T19:29:59.352Z"
+}

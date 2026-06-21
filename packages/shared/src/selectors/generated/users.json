@@ -1,0 +1,79 @@
+{
+  "moduleKey": "users",
+  "url": "http://app.greencity.org.in/_admin/admin/UserList.aspx",
+  "title": "Admin Dashboard New - Green City Muzaffarpur",
+  "template": "paginated-grid",
+  "gridTables": [
+    {
+      "id": "ContentPlaceHolder1_GridView1",
+      "rowCount": 18,
+      "headers": [
+        "SrNo",
+        "User Name",
+        "Name",
+        "Email ID",
+        "Mobile No",
+        "Operations"
+      ]
+    }
+  ],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [],
+  "modals": [],
+  "detailLinks": [],
+  "formFields": [
+    {
+      "id": "ContentPlaceHolder1_SearchTextBox",
+      "name": "ctl00$ContentPlaceHolder1$SearchTextBox",
+      "type": "textarea",
+      "label": "ContentPlaceHolder1_SearchTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_UserNameTextBox",
+      "name": "ctl00$ContentPlaceHolder1$UserNameTextBox",
+      "type": "textarea",
+      "label": "ContentPlaceHolder1_UserNameTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_PasswordTextBox",
+      "name": "ctl00$ContentPlaceHolder1$PasswordTextBox",
+      "type": "password",
+      "label": "ContentPlaceHolder1_PasswordTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_NameTextBox",
+      "name": "ctl00$ContentPlaceHolder1$NameTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_NameTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_ContactNoTextBox",
+      "name": "ctl00$ContentPlaceHolder1$ContactNoTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_ContactNoTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_EmailIDTextBox",
+      "name": "ctl00$ContentPlaceHolder1$EmailIDTextBox",
+      "type": "textarea",
+      "label": "ContentPlaceHolder1_EmailIDTextBox",
+      "value": ""
+    }
+  ],
+  "attachments": [
+    "http://app.greencity.org.in/_admin/sales/SaleAttachments.aspx"
+  ],
+  "suggestedSelectors": {
+    "grid": "#ContentPlaceHolder1_GridView1",
+    "pagingLabel": "[id*=\"lblPaging\"]"
+  },
+  "extractMode": "grid",
+  "inspectedAt": "2026-06-20T19:29:39.182Z"
+}

@@ -1,0 +1,21 @@
+{
+  "moduleKey": "bp_income_summary",
+  "url": "http://app.greencity.org.in/_admin/membermanagement/IncomeSummary.aspx",
+  "title": "A field or property with the name 'Amount' was not found on the selected data source.",
+  "template": "unknown",
+  "gridTables": [],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [],
+  "modals": [],
+  "detailLinks": [],
+  "formFields": [],
+  "attachments": [],
+  "suggestedSelectors": {
+    "grid": "table[id*=\"GridView1\"], table[id*=\"GridView\"], table[id*=\"grd\"]",
+    "pagingLabel": "[id*=\"lblPaging\"]"
+  },
+  "extractMode": "grid",
+  "inspectedAt": "2026-06-20T19:30:10.876Z"
+}

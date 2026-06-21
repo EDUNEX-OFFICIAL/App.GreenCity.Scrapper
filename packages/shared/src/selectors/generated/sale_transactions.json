@@ -1,0 +1,58 @@
+{
+  "moduleKey": "sale_transactions",
+  "url": "http://app.greencity.org.in/_admin/sales/BookingDepositeList.aspx",
+  "title": "Admin Dashboard New - Green City Muzaffarpur",
+  "template": "paginated-grid",
+  "gridTables": [
+    {
+      "id": "ContentPlaceHolder1_GridView1",
+      "rowCount": 25,
+      "headers": []
+    }
+  ],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [],
+  "modals": [],
+  "detailLinks": [
+    "http://app.greencity.org.in/_admin/sales/cashmemoGREENCITY.aspx?bookingid=1169791&depositid=1137462",
+    "http://app.greencity.org.in/_admin/sales/cashmemoGREENCITY.aspx?bookingid=1169791&depositid=1137461",
+    "http://app.greencity.org.in/_admin/sales/cashmemoGREENCITY.aspx?bookingid=1169791&depositid=1137460",
+    "http://app.greencity.org.in/_admin/sales/cashmemoGREENCITY.aspx?bookingid=1169791&depositid=1137459",
+    "http://app.greencity.org.in/_admin/sales/cashmemoGREENCITY.aspx?bookingid=1165569&depositid=1137458",
+    "http://app.greencity.org.in/_admin/sales/cashmemoGREENCITY.aspx?bookingid=1168702&depositid=1137457",
+    "http://app.greencity.org.in/_admin/sales/cashmemoGREENCITY.aspx?bookingid=1169791&depositid=1137456",
+    "http://app.greencity.org.in/_admin/sales/cashmemoGREENCITY.aspx?bookingid=1169819&depositid=1137455",
+    "http://app.greencity.org.in/_admin/sales/cashmemoGREENCITY.aspx?bookingid=1169818&depositid=1137454",
+    "http://app.greencity.org.in/_admin/sales/cashmemoGREENCITY.aspx?bookingid=1163328&depositid=1137453",
+    "http://app.greencity.org.in/_admin/sales/cashmemoGREENCITY.aspx?bookingid=1169815&depositid=1137452",
+    "http://app.greencity.org.in/_admin/sales/cashmemoGREENCITY.aspx?bookingid=155850&depositid=1137449",
+    "http://app.greencity.org.in/_admin/sales/cashmemoGREENCITY.aspx?bookingid=1167668&depositid=1137448",
+    "http://app.greencity.org.in/_admin/sales/cashmemoGREENCITY.aspx?bookingid=1168764&depositid=1137447",
+    "http://app.greencity.org.in/_admin/sales/cashmemoGREENCITY.aspx?bookingid=1168818&depositid=1137446",
+    "http://app.greencity.org.in/_admin/sales/cashmemoGREENCITY.aspx?bookingid=1169817&depositid=1137445",
+    "http://app.greencity.org.in/_admin/sales/cashmemoGREENCITY.aspx?bookingid=1169816&depositid=1137444",
+    "http://app.greencity.org.in/_admin/sales/cashmemoGREENCITY.aspx?bookingid=1163460&depositid=1137443",
+    "http://app.greencity.org.in/_admin/sales/cashmemoGREENCITY.aspx?bookingid=1168797&depositid=1137442",
+    "http://app.greencity.org.in/_admin/sales/cashmemoGREENCITY.aspx?bookingid=1169796&depositid=1137441"
+  ],
+  "formFields": [
+    {
+      "id": "ContentPlaceHolder1_SearchTextBox",
+      "name": "ctl00$ContentPlaceHolder1$SearchTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_SearchTextBox",
+      "value": ""
+    }
+  ],
+  "attachments": [
+    "http://app.greencity.org.in/_admin/sales/SaleAttachments.aspx"
+  ],
+  "suggestedSelectors": {
+    "grid": "#ContentPlaceHolder1_GridView1",
+    "pagingLabel": "[id*=\"lblPaging\"]"
+  },
+  "extractMode": "grid",
+  "inspectedAt": "2026-06-20T19:29:15.924Z"
+}

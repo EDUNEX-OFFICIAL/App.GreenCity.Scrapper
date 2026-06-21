@@ -1,0 +1,157 @@
+{
+  "moduleKey": "new_bp",
+  "url": "http://app.greencity.org.in/_admin/membermanagement/AddNewBP.aspx",
+  "title": "Admin Dashboard New - Green City Muzaffarpur",
+  "template": "form-view",
+  "gridTables": [],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [],
+  "modals": [],
+  "detailLinks": [],
+  "formFields": [
+    {
+      "id": "ContentPlaceHolder1_RegistrationMemberIDTextBox",
+      "name": "ctl00$ContentPlaceHolder1$RegistrationMemberIDTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_RegistrationMemberIDTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_SponsorMemberIDTextBox",
+      "name": "ctl00$ContentPlaceHolder1$SponsorMemberIDTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_SponsorMemberIDTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_SponsorNameTextBox",
+      "name": "ctl00$ContentPlaceHolder1$SponsorNameTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_SponsorNameTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_PositionDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$PositionDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_PositionDropDownList",
+      "value": "1"
+    },
+    {
+      "id": "ContentPlaceHolder1_ParentIDTextBox",
+      "name": "ctl00$ContentPlaceHolder1$ParentIDTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_ParentIDTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_ParentNameTextBox",
+      "name": "ctl00$ContentPlaceHolder1$ParentNameTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_ParentNameTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_RegistrationPasswordTextBox",
+      "name": "ctl00$ContentPlaceHolder1$RegistrationPasswordTextBox",
+      "type": "password",
+      "label": "ContentPlaceHolder1_RegistrationPasswordTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_ReRegistrationPasswordTextBox",
+      "name": "ctl00$ContentPlaceHolder1$ReRegistrationPasswordTextBox",
+      "type": "password",
+      "label": "ContentPlaceHolder1_ReRegistrationPasswordTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_RegistrationNameTextBox",
+      "name": "ctl00$ContentPlaceHolder1$RegistrationNameTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_RegistrationNameTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_FNameTextBox",
+      "name": "ctl00$ContentPlaceHolder1$FNameTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_FNameTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_RegistrationMobileTextBox",
+      "name": "ctl00$ContentPlaceHolder1$RegistrationMobileTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_RegistrationMobileTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_DOBTextBox",
+      "name": "ctl00$ContentPlaceHolder1$DOBTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_DOBTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_IdTypeDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$IdTypeDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_IdTypeDropDownList",
+      "value": "ADHAAR NO."
+    },
+    {
+      "id": "ContentPlaceHolder1_IdNoTextBox",
+      "name": "ctl00$ContentPlaceHolder1$IdNoTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_IdNoTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_BankNameTextBox2",
+      "name": "ctl00$ContentPlaceHolder1$BankNameTextBox2",
+      "type": "text",
+      "label": "ContentPlaceHolder1_BankNameTextBox2",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_BankAddressTextBox5",
+      "name": "ctl00$ContentPlaceHolder1$BankAddressTextBox5",
+      "type": "text",
+      "label": "ContentPlaceHolder1_BankAddressTextBox5",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_BankAccNoTextBox3",
+      "name": "ctl00$ContentPlaceHolder1$BankAccNoTextBox3",
+      "type": "text",
+      "label": "ContentPlaceHolder1_BankAccNoTextBox3",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_IFSCCodeTextBox4",
+      "name": "ctl00$ContentPlaceHolder1$IFSCCodeTextBox4",
+      "type": "text",
+      "label": "ContentPlaceHolder1_IFSCCodeTextBox4",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_PanTextBox1",
+      "name": "ctl00$ContentPlaceHolder1$PanTextBox1",
+      "type": "text",
+      "label": "ContentPlaceHolder1_PanTextBox1",
+      "value": ""
+    }
+  ],
+  "attachments": [
+    "http://app.greencity.org.in/_admin/sales/SaleAttachments.aspx"
+  ],
+  "suggestedSelectors": {
+    "grid": "table[id*=\"GridView1\"], table[id*=\"GridView\"], table[id*=\"grd\"]",
+    "pagingLabel": "[id*=\"lblPaging\"]"
+  },
+  "extractMode": "form",
+  "inspectedAt": "2026-06-20T19:30:19.382Z"
+}

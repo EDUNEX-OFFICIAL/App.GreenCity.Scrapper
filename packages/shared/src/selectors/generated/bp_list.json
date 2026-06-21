@@ -1,0 +1,82 @@
+{
+  "moduleKey": "bp_list",
+  "url": "http://app.greencity.org.in/_admin/membermanagement/AdminMemberList.aspx",
+  "title": "Admin Dashboard New - Green City Muzaffarpur",
+  "template": "paginated-grid",
+  "gridTables": [
+    {
+      "id": "ContentPlaceHolder1_GridView1",
+      "rowCount": 23,
+      "headers": []
+    }
+  ],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [
+    "ContentPlaceHolder1_MonthDropDownList"
+  ],
+  "modals": [],
+  "detailLinks": [],
+  "formFields": [
+    {
+      "id": "ContentPlaceHolder1_SearchTextBox",
+      "name": "ctl00$ContentPlaceHolder1$SearchTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_SearchTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_FinYearCheckBox",
+      "name": "ctl00$ContentPlaceHolder1$FinYearCheckBox",
+      "type": "checkbox",
+      "label": "Financial Year:",
+      "value": "on"
+    },
+    {
+      "id": "ContentPlaceHolder1_FinYearDropDownList1",
+      "name": "ctl00$ContentPlaceHolder1$FinYearDropDownList1",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_FinYearDropDownList1",
+      "value": "2026"
+    },
+    {
+      "id": "ContentPlaceHolder1_MonthCheckBox",
+      "name": "ctl00$ContentPlaceHolder1$MonthCheckBox",
+      "type": "checkbox",
+      "label": "Month:",
+      "value": "on"
+    },
+    {
+      "id": "ContentPlaceHolder1_MonthDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$MonthDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_MonthDropDownList",
+      "value": "4-2026"
+    },
+    {
+      "id": "ContentPlaceHolder1_SubHeadDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$SubHeadDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_SubHeadDropDownList",
+      "value": "0"
+    },
+    {
+      "id": "ContentPlaceHolder1_ProjectDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$ProjectDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_ProjectDropDownList",
+      "value": "0"
+    }
+  ],
+  "attachments": [
+    "http://app.greencity.org.in/_admin/sales/SaleAttachments.aspx"
+  ],
+  "suggestedSelectors": {
+    "grid": "#ContentPlaceHolder1_GridView1",
+    "pagingLabel": "#ContentPlaceHolder1_lblPaging, [id*=\"lblPaging\"]",
+    "searchButton": "input[type=\"submit\"][value*=\"Search\" i], input[id*=\"btnSearch\" i], input[value*=\"Show\" i], button:has-text(\"Search\")"
+  },
+  "extractMode": "grid",
+  "inspectedAt": "2026-06-20T19:28:20.038Z"
+}

@@ -1,0 +1,49 @@
+{
+  "moduleKey": "site_visit_expense",
+  "url": "http://app.greencity.org.in/_admin/membermanagement/BPSiteVisitExpense.aspx",
+  "title": "Admin Dashboard New - Green City Muzaffarpur",
+  "template": "unknown",
+  "gridTables": [],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [
+    "ContentPlaceHolder1_StartTextBox",
+    "ContentPlaceHolder1_EndTextBox"
+  ],
+  "modals": [],
+  "detailLinks": [],
+  "formFields": [
+    {
+      "id": "ContentPlaceHolder1_SearchTextBox",
+      "name": "ctl00$ContentPlaceHolder1$SearchTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_SearchTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_StartTextBox",
+      "name": "ctl00$ContentPlaceHolder1$StartTextBox",
+      "type": "date",
+      "label": "ContentPlaceHolder1_StartTextBox",
+      "value": "2026-06-01"
+    },
+    {
+      "id": "ContentPlaceHolder1_EndTextBox",
+      "name": "ctl00$ContentPlaceHolder1$EndTextBox",
+      "type": "date",
+      "label": "ContentPlaceHolder1_EndTextBox",
+      "value": "2026-06-21"
+    }
+  ],
+  "attachments": [
+    "http://app.greencity.org.in/_admin/sales/SaleAttachments.aspx"
+  ],
+  "suggestedSelectors": {
+    "grid": "table[id*=\"GridView1\"], table[id*=\"GridView\"], table[id*=\"grd\"]",
+    "pagingLabel": "[id*=\"lblPaging\"]",
+    "searchButton": "input[type=\"submit\"][value*=\"Search\" i], input[id*=\"btnSearch\" i], input[value*=\"Show\" i], button:has-text(\"Search\")"
+  },
+  "extractMode": "grid",
+  "inspectedAt": "2026-06-20T19:30:42.825Z"
+}

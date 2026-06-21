@@ -1,0 +1,104 @@
+{
+  "moduleKey": "transactions_sheet",
+  "url": "http://app.greencity.org.in/_admin/accountingreports/Transactions_Sheet.aspx",
+  "title": "Admin Dashboard New - Green City Muzaffarpur",
+  "template": "report-filter",
+  "gridTables": [],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [
+    "ContentPlaceHolder1_MonthDropDownList"
+  ],
+  "modals": [],
+  "detailLinks": [],
+  "formFields": [
+    {
+      "id": "ContentPlaceHolder1_FinYearDropDownList1",
+      "name": "ctl00$ContentPlaceHolder1$FinYearDropDownList1",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_FinYearDropDownList1",
+      "value": "2027"
+    },
+    {
+      "id": "ContentPlaceHolder1_BranchCheckBox",
+      "name": "ctl00$ContentPlaceHolder1$BranchCheckBox",
+      "type": "checkbox",
+      "label": "Branch:",
+      "value": "on"
+    },
+    {
+      "id": "ContentPlaceHolder1_BranchDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$BranchDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_BranchDropDownList",
+      "value": "3"
+    },
+    {
+      "id": "ContentPlaceHolder1_MonthCheckBox",
+      "name": "ctl00$ContentPlaceHolder1$MonthCheckBox",
+      "type": "checkbox",
+      "label": "Month:",
+      "value": "on"
+    },
+    {
+      "id": "ContentPlaceHolder1_MonthDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$MonthDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_MonthDropDownList",
+      "value": "6"
+    },
+    {
+      "id": "ContentPlaceHolder1_HeadCheckBox",
+      "name": "ctl00$ContentPlaceHolder1$HeadCheckBox",
+      "type": "checkbox",
+      "label": "Main Head:",
+      "value": "on"
+    },
+    {
+      "id": "ContentPlaceHolder1_HeadDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$HeadDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_HeadDropDownList",
+      "value": "19"
+    },
+    {
+      "id": "ContentPlaceHolder1_SubHeadCheckBox",
+      "name": "ctl00$ContentPlaceHolder1$SubHeadCheckBox",
+      "type": "checkbox",
+      "label": "Sub Head:",
+      "value": "on"
+    },
+    {
+      "id": "ContentPlaceHolder1_SubHeadDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$SubHeadDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_SubHeadDropDownList",
+      "value": "0"
+    },
+    {
+      "id": "ContentPlaceHolder1_StatCheckBox",
+      "name": "ctl00$ContentPlaceHolder1$StatCheckBox",
+      "type": "checkbox",
+      "label": "Status:",
+      "value": "on"
+    },
+    {
+      "id": "ContentPlaceHolder1_StatDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$StatDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_StatDropDownList",
+      "value": "1"
+    }
+  ],
+  "attachments": [
+    "http://app.greencity.org.in/_admin/sales/SaleAttachments.aspx"
+  ],
+  "suggestedSelectors": {
+    "grid": "table[id*=\"GridView1\"], table[id*=\"GridView\"], table[id*=\"grd\"]",
+    "pagingLabel": "[id*=\"lblPaging\"]",
+    "searchButton": "input[type=\"submit\"][value*=\"Search\" i], input[id*=\"btnSearch\" i], input[value*=\"Show\" i], button:has-text(\"Search\")"
+  },
+  "extractMode": "report",
+  "inspectedAt": "2026-06-20T19:29:30.324Z"
+}

@@ -1,0 +1,112 @@
+{
+  "moduleKey": "sale_list",
+  "url": "http://app.greencity.org.in/_admin/sales/BookingPlotList.aspx",
+  "title": "Admin Dashboard New - Green City Muzaffarpur",
+  "template": "paginated-grid",
+  "gridTables": [
+    {
+      "id": "ContentPlaceHolder1_GridView1",
+      "rowCount": 25,
+      "headers": []
+    }
+  ],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [],
+  "modals": [],
+  "detailLinks": [
+    "http://app.greencity.org.in/_admin/sales/BookingLedger.aspx?id=1169819",
+    "http://app.greencity.org.in/_admin/sales/PlotAgreementGREENCITY.aspx?bookingid=1169819",
+    "http://app.greencity.org.in/_admin/sales/BookingLedger.aspx?id=1169818",
+    "http://app.greencity.org.in/_admin/sales/PlotAgreementGREENCITY.aspx?bookingid=1169818",
+    "http://app.greencity.org.in/_admin/sales/BookingLedger.aspx?id=1169817",
+    "http://app.greencity.org.in/_admin/sales/PlotAgreementGREENCITY.aspx?bookingid=1169817",
+    "http://app.greencity.org.in/_admin/sales/BookingLedger.aspx?id=1169816",
+    "http://app.greencity.org.in/_admin/sales/PlotAgreementGREENCITY.aspx?bookingid=1169816",
+    "http://app.greencity.org.in/_admin/sales/BookingLedger.aspx?id=1169815",
+    "http://app.greencity.org.in/_admin/sales/PlotAgreementGREENCITY.aspx?bookingid=1169815",
+    "http://app.greencity.org.in/_admin/sales/BookingLedger.aspx?id=1169809",
+    "http://app.greencity.org.in/_admin/sales/PlotAgreementGREENCITY.aspx?bookingid=1169809",
+    "http://app.greencity.org.in/_admin/sales/BookingLedger.aspx?id=1169808",
+    "http://app.greencity.org.in/_admin/sales/PlotAgreementGREENCITY.aspx?bookingid=1169808",
+    "http://app.greencity.org.in/_admin/sales/BookingLedger.aspx?id=1169807",
+    "http://app.greencity.org.in/_admin/sales/PlotAgreementGREENCITY.aspx?bookingid=1169807",
+    "http://app.greencity.org.in/_admin/sales/BookingLedger.aspx?id=1169806",
+    "http://app.greencity.org.in/_admin/sales/PlotAgreementGREENCITY.aspx?bookingid=1169806",
+    "http://app.greencity.org.in/_admin/sales/BookingLedger.aspx?id=1169805",
+    "http://app.greencity.org.in/_admin/sales/PlotAgreementGREENCITY.aspx?bookingid=1169805"
+  ],
+  "formFields": [
+    {
+      "id": "ContentPlaceHolder1_StatDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$StatDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_StatDropDownList",
+      "value": "BOOKED"
+    },
+    {
+      "id": "ContentPlaceHolder1_SearchTextBox",
+      "name": "ctl00$ContentPlaceHolder1$SearchTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_SearchTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_GroupDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$GroupDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_GroupDropDownList",
+      "value": "1016"
+    },
+    {
+      "id": "ContentPlaceHolder1_FileUpload1",
+      "name": "ctl00$ContentPlaceHolder1$FileUpload1",
+      "type": "file",
+      "label": "ContentPlaceHolder1_FileUpload1",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_DescritionTextBox",
+      "name": "ctl00$ContentPlaceHolder1$DescritionTextBox",
+      "type": "textarea",
+      "label": "ContentPlaceHolder1_DescritionTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_SubHeadDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$SubHeadDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_SubHeadDropDownList",
+      "value": "4"
+    }
+  ],
+  "attachments": [
+    "http://app.greencity.org.in/_admin/sales/SaleAttachments.aspx",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl03$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl04$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl05$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl06$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl07$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl08$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl09$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl10$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl11$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl12$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl13$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl14$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl15$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl16$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl17$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl18$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl19$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl20$AttachmentsLinkButton','')",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$GridView1$ctl21$AttachmentsLinkButton','')"
+  ],
+  "suggestedSelectors": {
+    "grid": "#ContentPlaceHolder1_GridView1",
+    "pagingLabel": "#ContentPlaceHolder1_lblPaging, [id*=\"lblPaging\"]"
+  },
+  "extractMode": "grid",
+  "inspectedAt": "2026-06-20T19:28:22.946Z"
+}

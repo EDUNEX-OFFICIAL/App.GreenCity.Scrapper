@@ -1,0 +1,21 @@
+{
+  "moduleKey": "registry_list",
+  "url": "http://app.greencity.org.in/_admin/rawassets/BookingPlotListRegistry.aspx",
+  "title": "The resource cannot be found.",
+  "template": "unknown",
+  "gridTables": [],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [],
+  "modals": [],
+  "detailLinks": [],
+  "formFields": [],
+  "attachments": [],
+  "suggestedSelectors": {
+    "grid": "table[id*=\"GridView1\"], table[id*=\"GridView\"], table[id*=\"grd\"]",
+    "pagingLabel": "[id*=\"lblPaging\"]"
+  },
+  "extractMode": "grid",
+  "inspectedAt": "2026-06-20T19:31:53.668Z"
+}

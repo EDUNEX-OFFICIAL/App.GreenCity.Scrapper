@@ -1,0 +1,188 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["ingest", "system"]
+}
+
+enum ScrapeRunStatus {
+  pending
+  running
+  completed
+  failed
+  partial
+  cancelled
+
+  @@schema("ingest")
+}
+
+enum Portal {
+  admin
+  bp
+
+  @@schema("ingest")
+}
+
+enum BpSessionSource {
+  panel
+  direct_login
+
+  @@schema("ingest")
+}
+
+enum GenealogyTreeType {
+  sponsor
+  binary
+
+  @@schema("ingest")
+}
+
+enum GenealogyLeg {
+  left
+  right
+  sponsor
+  unknown
+
+  @@schema("ingest")
+}
+
+model ScrapeRun {
+  id            String          @id @default(cuid())
+  moduleKey     String
+  portal        Portal
+  bpCode        String?
+  status        ScrapeRunStatus @default(pending)
+  startedAt     DateTime?
+  finishedAt    DateTime?
+  rowCount      Int             @default(0)
+  rowsInserted  Int             @default(0)
+  rowsUpdated   Int             @default(0)
+  error         String?
+  metadata      Json?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  rawRows       RawModuleRow[]
+  failures      ScrapeFailure[]
+
+  @@index([moduleKey, portal])
+  @@index([status])
+  @@index([createdAt])
+  @@schema("ingest")
+}
+
+model RawModuleRow {
+  id          String    @id @default(cuid())
+  moduleKey   String
+  portal      Portal
+  bpCode      String?
+  rowJson     Json
+  rowHash     String    @unique
+  firstSeenAt DateTime  @default(now())
+  lastSeenAt  DateTime  @default(now())
+  scrapeRunId String
+  scrapeRun   ScrapeRun @relation(fields: [scrapeRunId], references: [id], onDelete: Cascade)
+
+  @@index([moduleKey, portal])
+  @@index([moduleKey, bpCode])
+  @@index([lastSeenAt])
+  @@schema("ingest")
+}
+
+model BpSession {
+  id                String          @id @default(cuid())
+  bpCode            String          @unique
+  bpName            String?
+  storageStatePath  String
+  lastValidatedAt   DateTime?
+  source            BpSessionSource
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@schema("ingest")
+}
+
+model ModuleSchedule {
+  id         String  @id @default(cuid())
+  moduleKey  String  @unique
+  cron       String
+  enabled    Boolean @default(true)
+  priority   Int     @default(0)
+  timezone   String  @default("Asia/Kolkata")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@schema("system")
+}
+
+model ScrapeFailure {
+  id          String    @id @default(cuid())
+  scrapeRunId String
+  scrapeRun   ScrapeRun @relation(fields: [scrapeRunId], references: [id], onDelete: Cascade)
+  moduleKey   String
+  url         String?
+  error       String
+  htmlPath    String?
+  createdAt   DateTime  @default(now())
+
+  @@index([scrapeRunId])
+  @@schema("ingest")
+}
+
+model GenealogyNode {
+  id            String            @id @default(cuid())
+  bpCode        String
+  bpName        String?
+  uid           String?
+  treeType      GenealogyTreeType
+  modalData     Json              @default("{}")
+  childrenJson  Json              @default("[]")
+  scrapeRunId   String
+  scrapedAt     DateTime          @default(now())
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  @@unique([bpCode, treeType])
+  @@index([treeType])
+  @@index([scrapeRunId])
+  @@schema("ingest")
+}
+
+model GenealogyEdge {
+  id           String            @id @default(cuid())
+  parentBpCode String
+  childBpCode  String
+  treeType     GenealogyTreeType
+  leg          GenealogyLeg      @default(unknown)
+  scrapeRunId  String
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  @@unique([parentBpCode, childBpCode, treeType])
+  @@index([childBpCode, treeType])
+  @@index([parentBpCode, treeType])
+  @@schema("ingest")
+}
+
+model BackfillProgress {
+  id            String   @id @default(cuid())
+  moduleKey     String
+  portal        Portal
+  bpCode        String?
+  dateFrom      String?
+  dateTo        String?
+  currentCursor String?
+  totalChunks   Int      @default(0)
+  completedChunks Int    @default(0)
+  status        ScrapeRunStatus @default(pending)
+  metadata      Json?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([moduleKey, portal, bpCode])
+  @@schema("ingest")
+}

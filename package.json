@@ -1,0 +1,27 @@
+{
+  "name": "greencity-erp",
+  "private": true,
+  "packageManager": "pnpm@10.28.2",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --filter=@greencity/api --filter=@greencity/scraper",
+    "dev:api": "turbo run dev --filter=@greencity/api",
+    "dev:scraper": "turbo run dev --filter=@greencity/scraper",
+    "lint": "turbo run lint",
+    "db:generate": "pnpm --filter @greencity/db exec prisma generate",
+    "db:migrate": "pnpm --filter @greencity/db exec prisma migrate dev",
+    "db:deploy": "pnpm --filter @greencity/db exec prisma migrate deploy",
+    "db:push": "pnpm --filter @greencity/db exec prisma db push",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "bootstrap": "pnpm db:generate && turbo run build",
+    "verify:genealogy-dist": "node scripts/verify-genealogy-dist.mjs"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.4",
+    "typescript": "^5.8.3"
+  }
+}

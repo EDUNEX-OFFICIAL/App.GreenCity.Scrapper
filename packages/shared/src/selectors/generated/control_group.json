@@ -1,0 +1,57 @@
+{
+  "moduleKey": "control_group",
+  "url": "http://app.greencity.org.in/_admin/admin/AuthGroup.aspx",
+  "title": "Admin Dashboard New - Green City Muzaffarpur",
+  "template": "paginated-grid",
+  "gridTables": [
+    {
+      "id": "ContentPlaceHolder1_GridView1",
+      "rowCount": 14,
+      "headers": [
+        "&nbsp;",
+        "ID",
+        "Group Name",
+        "Display Name",
+        "Icon"
+      ]
+    }
+  ],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [],
+  "modals": [],
+  "detailLinks": [],
+  "formFields": [
+    {
+      "id": "ContentPlaceHolder1_NameTextBox",
+      "name": "ctl00$ContentPlaceHolder1$NameTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_NameTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_DisplayNameTextBox",
+      "name": "ctl00$ContentPlaceHolder1$DisplayNameTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_DisplayNameTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_IconTextBox",
+      "name": "ctl00$ContentPlaceHolder1$IconTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_IconTextBox",
+      "value": ""
+    }
+  ],
+  "attachments": [
+    "http://app.greencity.org.in/_admin/sales/SaleAttachments.aspx"
+  ],
+  "suggestedSelectors": {
+    "grid": "#ContentPlaceHolder1_GridView1",
+    "pagingLabel": "[id*=\"lblPaging\"]"
+  },
+  "extractMode": "grid",
+  "inspectedAt": "2026-06-20T19:29:42.010Z"
+}

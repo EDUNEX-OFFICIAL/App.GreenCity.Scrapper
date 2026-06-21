@@ -1,0 +1,58 @@
+{
+  "moduleKey": "accounting_transactions",
+  "url": "http://app.greencity.org.in/_admin/accountingoperation/transactions.aspx",
+  "title": "Admin Dashboard New - Green City Muzaffarpur",
+  "template": "paginated-grid",
+  "gridTables": [
+    {
+      "id": "ContentPlaceHolder1_GridView1",
+      "rowCount": 25,
+      "headers": []
+    }
+  ],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [],
+  "modals": [],
+  "detailLinks": [
+    "http://app.greencity.org.in/_admin/accountingoperation/voucherprint.aspx?id=258694",
+    "http://app.greencity.org.in/_admin/accountingoperation/voucherprint.aspx?id=258693",
+    "http://app.greencity.org.in/_admin/accountingoperation/voucherprint.aspx?id=258692",
+    "http://app.greencity.org.in/_admin/accountingoperation/voucherprint.aspx?id=258691",
+    "http://app.greencity.org.in/_admin/accountingoperation/voucherprint.aspx?id=258690",
+    "http://app.greencity.org.in/_admin/accountingoperation/voucherprint.aspx?id=258689",
+    "http://app.greencity.org.in/_admin/accountingoperation/voucherprint.aspx?id=258688",
+    "http://app.greencity.org.in/_admin/accountingoperation/voucherprint.aspx?id=258687",
+    "http://app.greencity.org.in/_admin/accountingoperation/voucherprint.aspx?id=258686",
+    "http://app.greencity.org.in/_admin/accountingoperation/voucherprint.aspx?id=258684",
+    "http://app.greencity.org.in/_admin/accountingoperation/voucherprint.aspx?id=258683",
+    "http://app.greencity.org.in/_admin/accountingoperation/voucherprint.aspx?id=258682",
+    "http://app.greencity.org.in/_admin/accountingoperation/voucherprint.aspx?id=258681",
+    "http://app.greencity.org.in/_admin/accountingoperation/voucherprint.aspx?id=258680",
+    "http://app.greencity.org.in/_admin/accountingoperation/voucherprint.aspx?id=258679",
+    "http://app.greencity.org.in/_admin/accountingoperation/voucherprint.aspx?id=258678",
+    "http://app.greencity.org.in/_admin/accountingoperation/voucherprint.aspx?id=258677",
+    "http://app.greencity.org.in/_admin/accountingoperation/voucherprint.aspx?id=258676",
+    "http://app.greencity.org.in/_admin/accountingoperation/voucherprint.aspx?id=258675",
+    "http://app.greencity.org.in/_admin/accountingoperation/voucherprint.aspx?id=258674"
+  ],
+  "formFields": [
+    {
+      "id": "ContentPlaceHolder1_SearchTextBox",
+      "name": "ctl00$ContentPlaceHolder1$SearchTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_SearchTextBox",
+      "value": ""
+    }
+  ],
+  "attachments": [
+    "http://app.greencity.org.in/_admin/sales/SaleAttachments.aspx"
+  ],
+  "suggestedSelectors": {
+    "grid": "#ContentPlaceHolder1_GridView1",
+    "pagingLabel": "#ContentPlaceHolder1_lblPaging, [id*=\"lblPaging\"]"
+  },
+  "extractMode": "grid",
+  "inspectedAt": "2026-06-20T19:28:26.019Z"
+}

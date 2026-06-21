@@ -1,0 +1,58 @@
+{
+  "moduleKey": "epin_list",
+  "url": "http://app.greencity.org.in/_admin/joiningpin/AdminMemberEPinStockSummary.aspx",
+  "title": "Admin Dashboard New - Green City Muzaffarpur",
+  "template": "paginated-grid",
+  "gridTables": [
+    {
+      "id": "ContentPlaceHolder1_GridView1",
+      "rowCount": 46,
+      "headers": [
+        "SrNo",
+        "Member ID",
+        "Name",
+        "Used Pin",
+        "Active Pin",
+        "Total Pin",
+        "Date Wise List"
+      ]
+    }
+  ],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [],
+  "modals": [],
+  "detailLinks": [
+    "http://app.greencity.org.in/_admin/joiningpin/AdminMemberEPinStockDateWise.aspx?userid=1",
+    "http://app.greencity.org.in/_admin/joiningpin/AdminMemberEPinStockDateWise.aspx?userid=2",
+    "http://app.greencity.org.in/_admin/joiningpin/AdminMemberEPinStockDateWise.aspx?userid=19",
+    "http://app.greencity.org.in/_admin/joiningpin/AdminMemberEPinStockDateWise.aspx?userid=20",
+    "http://app.greencity.org.in/_admin/joiningpin/AdminMemberEPinStockDateWise.aspx?userid=21",
+    "http://app.greencity.org.in/_admin/joiningpin/AdminMemberEPinStockDateWise.aspx?userid=25",
+    "http://app.greencity.org.in/_admin/joiningpin/AdminMemberEPinStockDateWise.aspx?userid=58",
+    "http://app.greencity.org.in/_admin/joiningpin/AdminMemberEPinStockDateWise.aspx?userid=61",
+    "http://app.greencity.org.in/_admin/joiningpin/AdminMemberEPinStockDateWise.aspx?userid=79",
+    "http://app.greencity.org.in/_admin/joiningpin/AdminMemberEPinStockDateWise.aspx?userid=85",
+    "http://app.greencity.org.in/_admin/joiningpin/AdminMemberEPinStockDateWise.aspx?userid=91",
+    "http://app.greencity.org.in/_admin/joiningpin/AdminMemberEPinStockDateWise.aspx?userid=97",
+    "http://app.greencity.org.in/_admin/joiningpin/AdminMemberEPinStockDateWise.aspx?userid=100",
+    "http://app.greencity.org.in/_admin/joiningpin/AdminMemberEPinStockDateWise.aspx?userid=106",
+    "http://app.greencity.org.in/_admin/joiningpin/AdminMemberEPinStockDateWise.aspx?userid=109",
+    "http://app.greencity.org.in/_admin/joiningpin/AdminMemberEPinStockDateWise.aspx?userid=127",
+    "http://app.greencity.org.in/_admin/joiningpin/AdminMemberEPinStockDateWise.aspx?userid=130",
+    "http://app.greencity.org.in/_admin/joiningpin/AdminMemberEPinStockDateWise.aspx?userid=205",
+    "http://app.greencity.org.in/_admin/joiningpin/AdminMemberEPinStockDateWise.aspx?userid=211",
+    "http://app.greencity.org.in/_admin/joiningpin/AdminMemberEPinStockDateWise.aspx?userid=214"
+  ],
+  "formFields": [],
+  "attachments": [
+    "http://app.greencity.org.in/_admin/sales/SaleAttachments.aspx"
+  ],
+  "suggestedSelectors": {
+    "grid": "#ContentPlaceHolder1_GridView1",
+    "pagingLabel": "[id*=\"lblPaging\"]"
+  },
+  "extractMode": "grid",
+  "inspectedAt": "2026-06-20T19:31:31.295Z"
+}

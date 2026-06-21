@@ -1,0 +1,21 @@
+{
+  "moduleKey": "payout_balance_sheet",
+  "url": "http://app.greencity.org.in/_admin/memberpayout/MemberPendingIncomeSummary.aspx",
+  "title": "Invalid object name 'BankTransferItem'.",
+  "template": "unknown",
+  "gridTables": [],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [],
+  "modals": [],
+  "detailLinks": [],
+  "formFields": [],
+  "attachments": [],
+  "suggestedSelectors": {
+    "grid": "table[id*=\"GridView1\"], table[id*=\"GridView\"], table[id*=\"grd\"]",
+    "pagingLabel": "[id*=\"lblPaging\"]"
+  },
+  "extractMode": "grid",
+  "inspectedAt": "2026-06-20T19:30:53.901Z"
+}

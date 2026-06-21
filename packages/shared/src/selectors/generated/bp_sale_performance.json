@@ -1,0 +1,74 @@
+{
+  "moduleKey": "bp_sale_performance",
+  "url": "http://app.greencity.org.in/_admin/membermanagement/BPSalePerformance.aspx",
+  "title": "Admin Dashboard New - Green City Muzaffarpur",
+  "template": "paginated-grid",
+  "gridTables": [
+    {
+      "id": "ContentPlaceHolder1_GridView2",
+      "rowCount": 467,
+      "headers": [
+        "SrNo",
+        "Leader ID",
+        "Sale ID",
+        "Sale Date",
+        "Phase",
+        "Plot",
+        "Name",
+        "Mobile No",
+        "No of EMI Received",
+        "Area",
+        "Rate",
+        "Total Amt",
+        "Total EMI",
+        "Paid Amt"
+      ]
+    }
+  ],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [],
+  "modals": [],
+  "detailLinks": [],
+  "formFields": [
+    {
+      "id": "ContentPlaceHolder1_BPIDTextBox",
+      "name": "ctl00$ContentPlaceHolder1$BPIDTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_BPIDTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_ProjectMainDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$ProjectMainDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_ProjectMainDropDownList",
+      "value": "0"
+    },
+    {
+      "id": "ContentPlaceHolder1_ProjectPhaseDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$ProjectPhaseDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_ProjectPhaseDropDownList",
+      "value": "0"
+    },
+    {
+      "id": "ContentPlaceHolder1_SearchTextBox",
+      "name": "ctl00$ContentPlaceHolder1$SearchTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_SearchTextBox",
+      "value": ""
+    }
+  ],
+  "attachments": [
+    "http://app.greencity.org.in/_admin/sales/SaleAttachments.aspx",
+    "javascript:__doPostBack('ctl00$ContentPlaceHolder1$DownloadLinkButton2','')"
+  ],
+  "suggestedSelectors": {
+    "grid": "#ContentPlaceHolder1_GridView2",
+    "pagingLabel": "[id*=\"lblPaging\"]"
+  },
+  "extractMode": "grid",
+  "inspectedAt": "2026-06-20T19:30:34.094Z"
+}

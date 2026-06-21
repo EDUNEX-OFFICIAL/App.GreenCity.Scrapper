@@ -1,0 +1,154 @@
+{
+  "moduleKey": "add_earning_on_sale",
+  "url": "http://app.greencity.org.in/_admin/sales/BookingDepositAdd.aspx",
+  "title": "Admin Dashboard New - Green City Muzaffarpur",
+  "template": "form-view",
+  "gridTables": [],
+  "pagingLabel": null,
+  "viewAllVisible": false,
+  "exportButton": null,
+  "searchControls": [
+    "ContentPlaceHolder1_ChequeDateTextBox",
+    "ContentPlaceHolder1_ApplyDateTextBox"
+  ],
+  "modals": [],
+  "detailLinks": [],
+  "formFields": [
+    {
+      "id": "ContentPlaceHolder1_BranchDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$BranchDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_BranchDropDownList",
+      "value": "3"
+    },
+    {
+      "id": "ContentPlaceHolder1_ProjectMainDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$ProjectMainDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_ProjectMainDropDownList",
+      "value": "0"
+    },
+    {
+      "id": "ContentPlaceHolder1_ProjectDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$ProjectDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_ProjectDropDownList",
+      "value": "0"
+    },
+    {
+      "id": "ContentPlaceHolder1_PlotGroupDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$PlotGroupDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_PlotGroupDropDownList",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_PlotDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$PlotDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_PlotDropDownList",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_BookingIDTextBox",
+      "name": "ctl00$ContentPlaceHolder1$BookingIDTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_BookingIDTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_BookedByTextBox",
+      "name": "ctl00$ContentPlaceHolder1$BookedByTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_BookedByTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_PaymentGroupDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$PaymentGroupDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_PaymentGroupDropDownList",
+      "value": "earningonsale"
+    },
+    {
+      "id": "ContentPlaceHolder1_PaymentTypeDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$PaymentTypeDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_PaymentTypeDropDownList",
+      "value": "CASH"
+    },
+    {
+      "id": "ContentPlaceHolder1_AmountTextBox",
+      "name": "ctl00$ContentPlaceHolder1$AmountTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_AmountTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_BankAllCheckBox",
+      "name": "ctl00$ContentPlaceHolder1$BankAllCheckBox",
+      "type": "checkbox",
+      "label": "",
+      "value": "on"
+    },
+    {
+      "id": "ContentPlaceHolder1_BankDropDownList",
+      "name": "ctl00$ContentPlaceHolder1$BankDropDownList",
+      "type": "select-one",
+      "label": "ContentPlaceHolder1_BankDropDownList",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_ChequeNoTextBox1",
+      "name": "ctl00$ContentPlaceHolder1$ChequeNoTextBox1",
+      "type": "text",
+      "label": "ContentPlaceHolder1_ChequeNoTextBox1",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_ChequeDateTextBox",
+      "name": "ctl00$ContentPlaceHolder1$ChequeDateTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_ChequeDateTextBox",
+      "value": "21/06/2026"
+    },
+    {
+      "id": "ContentPlaceHolder1_BankTextBox",
+      "name": "ctl00$ContentPlaceHolder1$BankTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_BankTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_BankAccTextBox",
+      "name": "ctl00$ContentPlaceHolder1$BankAccTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_BankAccTextBox",
+      "value": ""
+    },
+    {
+      "id": "ContentPlaceHolder1_ApplyDateTextBox",
+      "name": "ctl00$ContentPlaceHolder1$ApplyDateTextBox",
+      "type": "text",
+      "label": "ContentPlaceHolder1_ApplyDateTextBox",
+      "value": "21/06/2026"
+    },
+    {
+      "id": "ContentPlaceHolder1_PaymentDescriptionTextBox",
+      "name": "ctl00$ContentPlaceHolder1$PaymentDescriptionTextBox",
+      "type": "textarea",
+      "label": "ContentPlaceHolder1_PaymentDescriptionTextBox",
+      "value": ""
+    }
+  ],
+  "attachments": [
+    "http://app.greencity.org.in/_admin/sales/SaleAttachments.aspx"
+  ],
+  "suggestedSelectors": {
+    "grid": "table[id*=\"GridView1\"], table[id*=\"GridView\"], table[id*=\"grd\"]",
+    "pagingLabel": "[id*=\"lblPaging\"]",
+    "searchButton": "input[type=\"submit\"][value*=\"Search\" i], input[id*=\"btnSearch\" i], input[value*=\"Show\" i], button:has-text(\"Search\")"
+  },
+  "extractMode": "form",
+  "inspectedAt": "2026-06-20T19:29:12.989Z"
+}

@@ -1,20 +1,10 @@
-import { Queue, Worker, type JobsOptions, type ConnectionOptions } from 'bullmq';
+import { Queue, Worker, type JobsOptions } from 'bullmq';
 import type { ScrapeJobPayload } from '@greencity/shared';
+import { getRedisConnection } from './connection.js';
 
 export const QUEUE_NAME = 'greencity-module-scrape';
 
 let queue: Queue<ScrapeJobPayload> | undefined;
-
-export function getRedisConnection(): ConnectionOptions {
-  const url = process.env.REDIS_URL ?? 'redis://localhost:6380';
-  const parsed = new URL(url);
-  return {
-    host: parsed.hostname,
-    port: Number.parseInt(parsed.port || '6379', 10),
-    password: parsed.password || undefined,
-    maxRetriesPerRequest: null,
-  };
-}
 
 export function getScrapeQueue(): Queue<ScrapeJobPayload> {
   if (!queue) {
@@ -64,6 +54,8 @@ export async function cleanFailedJobs(): Promise<number> {
 }
 
 export { Worker, type ConnectionOptions } from 'bullmq';
+export { getRedisConnection } from './connection.js';
+export { closeSharedRedis } from './redis-client.js';
 export { runBackfillOrchestrator, markBackfillChunkComplete } from './backfill.js';
 export { getWorkerStatus, setWorkerHeartbeat, WORKER_HEARTBEAT_KEY } from './worker-status.js';
 export {
@@ -86,3 +78,15 @@ export {
   getBpHarvestQueueCounts,
   obliterateBpHarvestQueue,
 } from './harvest-queue.js';
+export {
+  pauseGenealogyScrape,
+  resumeGenealogyScrape,
+  pauseAdminScrape,
+  resumeAdminScrape,
+  stopAdminScrape,
+  stopAdminModuleScrape,
+  stopGenealogyScrape,
+  isGenealogyScrapePaused,
+  isAdminScrapePaused,
+  getScrapeControlStatus,
+} from './scrape-control.js';

@@ -1,6 +1,6 @@
 import { Queue, type JobsOptions } from 'bullmq';
 import type { BpHarvestJobPayload } from '@greencity/shared';
-import { getRedisConnection } from './index.js';
+import { getRedisConnection } from './connection.js';
 import { jobEnqueueDelayMs } from './enqueue-stagger.js';
 
 export const BP_HARVEST_QUEUE_NAME = 'greencity-bp-harvest';

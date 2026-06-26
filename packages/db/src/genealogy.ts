@@ -18,6 +18,7 @@ const DEFAULT_DEFER_BP_CODES = [
   'vistaarcity03',
   'vistaar03',
   'sbtpl010',
+  'sbtpl011',
 ];
 
 function parseDeferCodes(): Set<string> {
@@ -33,8 +34,9 @@ function parseDeferCodes(): Set<string> {
 async function loadAllBpListEntries(): Promise<BpListEntry[]> {
   const prisma = getPrisma();
   const rows = await prisma.rawModuleRow.findMany({
-    where: { moduleKey: 'bp_list', portal: 'admin' },
-    select: { rowJson: true },
+    where: { moduleKey: 'bp_list', portal: 'admin', scrapeStatus: 'ok' },
+    select: { rowJson: true, lastSeenAt: true },
+    orderBy: { lastSeenAt: 'desc' },
   });
 
   const seen = new Map<string, BpListEntry>();
@@ -44,10 +46,11 @@ async function loadAllBpListEntries(): Promise<BpListEntry[]> {
     if (!bpCode || /^\d+$/.test(bpCode) || bpCode === '>>' || bpCode === '...') continue;
     if (/&nbsp;|&#\d+;|<[^>]+>/i.test(bpCode)) continue;
     if (!/[a-zA-Z0-9]/.test(bpCode) || bpCode.length < 3) continue;
-    if (!seen.has(bpCode)) {
-      const uid = data.UID?.trim() || undefined;
-      const uidNum = uid ? Number.parseInt(uid, 10) : undefined;
-      seen.set(bpCode, {
+    const uid = data.UID?.trim();
+    if (!uid) continue;
+    if (!seen.has(uid)) {
+      const uidNum = Number.parseInt(uid, 10);
+      seen.set(uid, {
         bpCode,
         bpName: data.Name?.trim() || undefined,
         uid,
@@ -99,22 +102,113 @@ export async function getBpListEntriesForGenealogy(): Promise<BpListEntry[]> {
   return sorted;
 }
 
-/** BPs with both sponsor and binary genealogy nodes already scraped. */
-export async function getCompletedBpCodes(): Promise<Set<string>> {
+/** UIDs with both sponsor and binary genealogy nodes already scraped. */
+export async function getCompletedBpUids(): Promise<Set<string>> {
   const prisma = getPrisma();
   const nodes = await prisma.genealogyNode.findMany({
-    select: { bpCode: true, treeType: true },
+    where: { scrapeStatus: 'ok' },
+    select: { uid: true, treeType: true },
   });
-  const byBp = new Map<string, Set<string>>();
+  const byUid = new Map<string, Set<string>>();
   for (const n of nodes) {
-    if (!byBp.has(n.bpCode)) byBp.set(n.bpCode, new Set());
-    byBp.get(n.bpCode)!.add(n.treeType);
+    if (!byUid.has(n.uid)) byUid.set(n.uid, new Set());
+    byUid.get(n.uid)!.add(n.treeType);
   }
   const done = new Set<string>();
-  for (const [bpCode, trees] of byBp) {
-    if (trees.has('sponsor') && trees.has('binary')) done.add(bpCode);
+  for (const [uid, trees] of byUid) {
+    if (trees.has('sponsor') && trees.has('binary')) done.add(uid);
   }
   return done;
+}
+
+/** @deprecated Use getCompletedBpUids — returns completed UIDs (not bpCodes). */
+export async function getCompletedBpCodes(): Promise<Set<string>> {
+  return getCompletedBpUids();
+}
+
+/** BPs from bp_list missing sponsor and/or binary genealogy nodes. */
+export async function getIncompleteGenealogyBpCodes(): Promise<BpListEntry[]> {
+  const [allBps, completedSet] = await Promise.all([
+    getBpListEntriesForGenealogy(),
+    getCompletedBpUids(),
+  ]);
+  return allBps.filter((bp) => !bp.uid || !completedSet.has(bp.uid));
+}
+
+/** Sponsor BP IDs referenced in bp_list but missing as their own BP row. */
+export async function getMissingSponsorBpCodes(): Promise<string[]> {
+  const entries = await loadAllBpListEntries();
+  const knownBpCodes = new Set(entries.map((e) => e.bpCode.toLowerCase()));
+  const sponsors = new Set<string>();
+
+  for (const e of entries) {
+    const sponsor = e.sponsorBpId?.trim();
+    if (!sponsor || sponsor === '>>' || sponsor === '...') continue;
+    if (/&nbsp;|&#\d+;|<[^>]+>/i.test(sponsor)) continue;
+    if (!/[a-zA-Z0-9]/.test(sponsor) || sponsor.length < 3) continue;
+    if (!knownBpCodes.has(sponsor.toLowerCase())) {
+      sponsors.add(sponsor);
+    }
+  }
+
+  return [...sponsors].sort((a, b) => a.localeCompare(b));
+}
+
+/** BPs with at least one failed genealogy node (sponsor/binary scrape error). */
+export async function getFailedGenealogyBpCodes(): Promise<Set<string>> {
+  const prisma = getPrisma();
+  const rows = await prisma.genealogyNode.findMany({
+    where: { scrapeStatus: 'failed' },
+    select: { bpCode: true },
+    distinct: ['bpCode'],
+  });
+  return new Set(rows.map((r) => r.bpCode));
+}
+
+/** Remove genealogy nodes/edges for specific UIDs (retry prep). */
+export async function deleteGenealogyForUids(uids: string[]): Promise<{ nodes: number; edges: number }> {
+  if (uids.length === 0) return { nodes: 0, edges: 0 };
+  const prisma = getPrisma();
+  const nodes = await prisma.genealogyNode.findMany({
+    where: { uid: { in: uids } },
+    select: { bpCode: true },
+  });
+  const bpCodes = [...new Set(nodes.map((n) => n.bpCode))];
+  const [edges, deletedNodes] = await prisma.$transaction([
+    prisma.genealogyEdge.deleteMany({
+      where: {
+        OR: [
+          { parentBpCode: { in: bpCodes } },
+          { childBpCode: { in: bpCodes } },
+        ],
+      },
+    }),
+    prisma.genealogyNode.deleteMany({ where: { uid: { in: uids } } }),
+  ]);
+  return { nodes: deletedNodes.count, edges: edges.count };
+}
+
+/** Remove genealogy nodes/edges and bp_list failure stubs for specific BPs (retry prep). */
+export async function deleteGenealogyForBps(bpCodes: string[]): Promise<{ nodes: number; edges: number }> {
+  if (bpCodes.length === 0) return { nodes: 0, edges: 0 };
+  const prisma = getPrisma();
+  const failedRefs = bpCodes.map((c) => `bp:${c}`);
+  const [edges, nodes] = await prisma.$transaction([
+    prisma.genealogyEdge.deleteMany({
+      where: {
+        OR: [{ parentBpCode: { in: bpCodes } }, { childBpCode: { in: bpCodes } }],
+      },
+    }),
+    prisma.genealogyNode.deleteMany({ where: { bpCode: { in: bpCodes } } }),
+  ]);
+  await prisma.rawModuleRow.deleteMany({
+    where: {
+      moduleKey: 'bp_list',
+      scrapeStatus: 'failed',
+      failedRef: { in: failedRefs },
+    },
+  });
+  return { nodes: nodes.count, edges: edges.count };
 }
 
 export async function incrementGenealogyBatchProgress(
@@ -160,7 +254,7 @@ export async function incrementGenealogyBatchProgress(
 export async function upsertGenealogyNode(params: {
   bpCode: string;
   bpName?: string;
-  uid?: string;
+  uid: string;
   treeType: GenealogyTreeType;
   modalData: GenealogyModalData;
   children: GenealogyNodeRef[];
@@ -168,19 +262,20 @@ export async function upsertGenealogyNode(params: {
 }) {
   const prisma = getPrisma();
   return prisma.genealogyNode.upsert({
-    where: { bpCode_treeType: { bpCode: params.bpCode, treeType: params.treeType } },
+    where: { uid_treeType: { uid: params.uid, treeType: params.treeType } },
     create: {
       bpCode: params.bpCode,
       bpName: params.bpName ?? null,
-      uid: params.uid ?? null,
+      uid: params.uid,
       treeType: params.treeType,
       modalData: params.modalData as Prisma.InputJsonValue,
       childrenJson: params.children as unknown as Prisma.InputJsonValue,
       scrapeRunId: params.scrapeRunId,
     },
     update: {
+      bpCode: params.bpCode,
       bpName: params.bpName ?? null,
-      uid: params.uid ?? null,
+      uid: params.uid,
       modalData: params.modalData as Prisma.InputJsonValue,
       childrenJson: params.children as unknown as Prisma.InputJsonValue,
       scrapeRunId: params.scrapeRunId,
@@ -293,7 +388,7 @@ export async function upsertGenealogyResults(params: {
   nodes: Array<{
     bpCode: string;
     bpName?: string;
-    uid?: string;
+    uid: string;
     treeType: GenealogyTreeType;
     modalData: GenealogyModalData;
     children: GenealogyNodeRef[];
@@ -311,23 +406,27 @@ export async function upsertGenealogyResults(params: {
   await prisma.$transaction([
     ...params.nodes.map((node) =>
       prisma.genealogyNode.upsert({
-        where: { bpCode_treeType: { bpCode: node.bpCode, treeType: node.treeType } },
+        where: { uid_treeType: { uid: node.uid, treeType: node.treeType } },
         create: {
           bpCode: node.bpCode,
           bpName: node.bpName ?? null,
-          uid: node.uid ?? null,
+          uid: node.uid,
           treeType: node.treeType,
           modalData: node.modalData as Prisma.InputJsonValue,
           childrenJson: node.children as unknown as Prisma.InputJsonValue,
           scrapeRunId: node.scrapeRunId,
+          scrapeStatus: 'ok',
         },
         update: {
+          bpCode: node.bpCode,
           bpName: node.bpName ?? null,
-          uid: node.uid ?? null,
+          uid: node.uid,
           modalData: node.modalData as Prisma.InputJsonValue,
           childrenJson: node.children as unknown as Prisma.InputJsonValue,
           scrapeRunId: node.scrapeRunId,
           scrapedAt: new Date(),
+          scrapeStatus: 'ok',
+          scrapeError: null,
         },
       }),
     ),

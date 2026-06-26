@@ -1,0 +1,81 @@
+/** Modules exposed via typed Integration API endpoints. */
+export const INTEGRATION_TYPED_MODULES = {
+  transactions: 'accounting_transactions',
+  saleTransactions: 'sale_transactions',
+  incomeBySaleEarning: 'income_by_sale_earning',
+  plots: ['plot_list', 'registered_plot_list', 'govt_survey_plot'] as const,
+  branches: 'branch',
+  banks: 'master_bank',
+  accountingEntities: 'accounting_entity',
+} as const;
+
+/** Payout / payment source modules merged into GET /payments. */
+export const PAYMENT_SOURCE_MODULES: Record<string, string> = {
+  neft: 'neft_list',
+  receipt: 'sale_report_transactions',
+  bp_payout: 'bp_payout_mgmt',
+  bulk_payment: 'bp_bulk_payment',
+  reward_emi: 'neft_list_reward_emi',
+  reward: 'neft_list_reward',
+  income: 'income_details',
+  income_summary: 'payout_income_summary',
+};
+
+/** All admin module keys allowed on GET /modules/{moduleKey} (raw rows). */
+export const INTEGRATION_RAW_MODULE_ALLOWLIST: ReadonlySet<string> = new Set([
+  'bp_list',
+  'sale_list',
+  'accounting_transactions',
+  'sale_transactions',
+  'neft_list',
+  'sale_report_transactions',
+  'project',
+  'project_phase',
+  'branch',
+  'master_bank',
+  'plot_list',
+  'registered_plot_list',
+  'govt_survey_plot',
+  'accounting_entity',
+  'bank_to_bank',
+  'cash_ledger',
+  'sale_cheques',
+  'accounting_cheques',
+  'bp_payout_mgmt',
+  'bp_bulk_payment',
+  'income_details',
+  'payout_income_summary',
+  'downline_income_summary',
+  'neft_list_reward',
+  'neft_list_reward_emi',
+  'reward_emi_details',
+  'bp_income_summary_detail',
+  'income_by_sale_earning',
+  'finder_accounting_transactions',
+  'finder_sales_transaction',
+  'finder_sales',
+  'registry_list',
+  'raw_land',
+  'raw_payments',
+  'payout_balance_sheet',
+  'epin_list',
+  'users',
+  'company',
+]);
+
+/** Modules that should be scraped before consumers expect data (row count often 0). */
+export const PRIORITY_SCRAPE_MODULES = [
+  'plot_list',
+  'registered_plot_list',
+  'govt_survey_plot',
+  'branch',
+  'master_bank',
+  'cash_ledger',
+  'income_details',
+  'neft_list_reward',
+  'neft_list_reward_emi',
+  'bp_income_details',
+  'registry_list',
+  'raw_land',
+  'accounting_head',
+] as const;

@@ -16,6 +16,10 @@
     "benchmark:parallel-modules": "tsx src/cli-benchmark-parallel-modules.ts",
     "benchmark:concurrency": "tsx src/cli-benchmark-concurrency.ts",
     "validation:genealogy": "tsx src/cli-validation-genealogy.ts",
+    "migrate:genealogy-aliases": "tsx scripts/migrate-genealogy-aliases.ts",
+    "scrape:missing-sponsors": "tsx src/cli-scrape-missing-sponsors.ts",
+    "retry:vistaar-root": "tsx src/cli-retry-vistaar-root.ts",
+    "scrape:integration-modules": "tsx scripts/scrape-integration-modules.ts",
     "lint": "tsc --noEmit"
   },
   "dependencies": {

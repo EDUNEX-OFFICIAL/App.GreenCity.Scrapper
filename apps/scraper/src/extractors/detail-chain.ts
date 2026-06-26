@@ -1,8 +1,9 @@
 import type { Page } from 'playwright';
-import type { ModuleConfig, ExtractResult } from '@greencity/shared';
+import type { ModuleConfig, ExtractResult, ExtractOptions } from '@greencity/shared';
 import { mergeSelectors, jitteredDelay, loadConfig } from '@greencity/shared';
 import { extractGridFromDom } from './dom-grid.js';
 import { extractAttachmentLinksFn } from './dom-grid.browser.js';
+import { withExtraPage } from '@greencity/scraper-core';
 
 export async function extractFormFields(page: Page, config: ModuleConfig): Promise<ExtractResult> {
   const row = await page.evaluate(() => {
@@ -58,6 +59,7 @@ export async function followDetailLinks(
   page: Page,
   config: ModuleConfig,
   parentRows: Record<string, string>[],
+  options?: ExtractOptions,
 ): Promise<ExtractResult['rows']> {
   const selectors = mergeSelectors(config.selectors);
   const detailColumn = selectors.detailLinkColumn ?? config.primaryKey[0];
@@ -73,27 +75,33 @@ export async function followDetailLinks(
     const href = parent[hrefKey];
     if (!href) continue;
 
-    const detailPage = await page.context().newPage();
-    try {
-      await detailPage.goto(href, { waitUntil: 'domcontentloaded', timeout: 60000 });
-      await jitteredDelay(cfg.scraperDelayMs);
-      const formResult = await extractFormFields(detailPage, config);
-      for (const r of formResult.rows) {
-        detailRows.push({
-          data: {
-            ...r.data,
-            _parentKeys: JSON.stringify(
-              config.primaryKey.reduce((acc, k) => ({ ...acc, [k]: parent[k] ?? '' }), {}),
-            ),
-            _detailUrl: href,
-          },
-        });
+    await withExtraPage(page, async (detailPage) => {
+      try {
+        await detailPage.goto(href, { waitUntil: 'domcontentloaded', timeout: 60000 });
+        await jitteredDelay(cfg.scraperDelayMs);
+        const formResult = await extractFormFields(detailPage, config);
+        for (const r of formResult.rows) {
+          detailRows.push({
+            data: {
+              ...r.data,
+              _parentKeys: JSON.stringify(
+                config.primaryKey.reduce((acc, k) => ({ ...acc, [k]: parent[k] ?? '' }), {}),
+              ),
+              _detailUrl: href,
+            },
+          });
+        }
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        const identifiers = config.primaryKey.reduce<Record<string, string>>(
+          (acc, k) => ({ ...acc, [k]: parent[k] ?? '' }),
+          {},
+        );
+        if (options?.onDetailFailed) {
+          await options.onDetailFailed(identifiers, message);
+        }
       }
-    } catch {
-      // skip failed detail pages
-    } finally {
-      await detailPage.close();
-    }
+    });
   }
 
   return detailRows;

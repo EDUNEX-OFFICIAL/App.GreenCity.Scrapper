@@ -1,6 +1,8 @@
 import type { Page } from 'playwright';
 import { bpUrl, createLogger, loadConfig } from '@greencity/shared';
 import type { BpModule, BpModuleName, BpHarvestContext, BpModuleResult } from './bp-module.js';
+import { withExtraPage } from './browser-resources.js';
+import { isHttpGenealogyConfigured, isHttpGenealogyHtmlEnabled } from './http-harvest.js';
 import { ProfileModule } from './modules/profile-module.js';
 import { GenealogyModule, type GenealogyScraperFn } from './modules/genealogy-module.js';
 
@@ -41,14 +43,12 @@ async function runProfileAndGenealogyParallel(
     throw new Error('Profile and genealogy modules required for parallel harvest');
   }
 
-  const context = bpPage.context();
-  const profilePage = await context.newPage();
   const cfg = loadConfig();
   const defaultHome = bpUrl(cfg.erpBaseUrl, '/Default.aspx');
   const homeUrl =
     /\/_bp\//i.test(bpPage.url()) && !/Login\.aspx/i.test(bpPage.url()) ? bpPage.url() : defaultHome;
 
-  try {
+  return withExtraPage(bpPage, async (profilePage) => {
     await profilePage.goto(homeUrl, { waitUntil: 'domcontentloaded', timeout: 60_000 });
     const [profileResult, genealogyResult] = await Promise.all([
       profileMod.execute(profilePage, ctx),
@@ -59,9 +59,7 @@ async function runProfileAndGenealogyParallel(
       ['profile', profileResult],
       ['genealogy', genealogyResult],
     ]);
-  } finally {
-    if (!profilePage.isClosed()) await profilePage.close();
-  }
+  });
 }
 
 export async function runBpModules(
@@ -99,4 +97,15 @@ export function getGenealogyAuthMode(): 'direct_login' | 'admin_panel' | 'auto' 
   const mode = process.env.GENEALOGY_AUTH_MODE ?? 'auto';
   if (mode === 'direct_login' || mode === 'admin_panel' || mode === 'auto') return mode;
   return 'auto';
+}
+
+/** HTTP password login is skipped when opening BP panels via admin Settings → Panel. */
+export function shouldUseHttpGenealogyHarvest(): boolean {
+  if (getGenealogyAuthMode() === 'admin_panel') return false;
+  return isHttpGenealogyConfigured();
+}
+
+/** Admin opens panel (cookie) → HTTP fetches TreeSponsor/TreeBinary HTML (no password, no Playwright trees). */
+export function isAdminPanelHttpHybridEnabled(): boolean {
+  return getGenealogyAuthMode() === 'admin_panel' && isHttpGenealogyHtmlEnabled();
 }

@@ -16,6 +16,21 @@ export interface BackfillConfig {
 
 export type PagingMode = 'auto' | 'lblPaging' | 'inline-grid';
 
+export interface DropdownIterateConfig {
+  /** CSS selector for the dropdown, e.g. #ContentPlaceHolder1_PayoutDropDownList */
+  selector: string;
+  /** rowJson key for selected option value (default: Payout ID) */
+  valueKey?: string;
+  /** rowJson key for selected option label (default: Payout Label) */
+  labelKey?: string;
+  /** Click search/show after selecting this dropdown (default: true for last in chain) */
+  searchAfterSelect?: boolean;
+  /** Extract form fields instead of grid at this step (or final step when set). */
+  extractAs?: 'form' | 'grid';
+  /** Wait for this selector to have >0 options after select (ASP.NET cascade dropdowns). */
+  waitForOptionsSelector?: string;
+}
+
 export interface ModuleConfig {
   key: string;
   portal: Portal;
@@ -32,6 +47,8 @@ export interface ModuleConfig {
   maxPages?: number;
   pagingMode?: PagingMode;
   upsertPerPage?: boolean;
+  /** Iterate dropdown options and scrape grid for each selection. */
+  dropdownIterate?: DropdownIterateConfig | DropdownIterateConfig[];
 }
 
 export interface ScrapeJobPayload {
@@ -65,6 +82,10 @@ export interface ExtractResult {
 
 export interface ExtractOptions {
   onPage?: (rows: Record<string, string>[], pageNum: number) => Promise<void>;
+  onPageFailed?: (pageNum: number, error: string) => Promise<void>;
+  onDetailFailed?: (identifiers: Record<string, string>, error: string) => Promise<void>;
   pageStart?: number;
   pageEnd?: number;
+  /** Skip dismissModals/search when caller already applied pre-actions (dropdown iterate). */
+  skipPreActions?: boolean;
 }

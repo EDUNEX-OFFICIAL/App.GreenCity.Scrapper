@@ -65,6 +65,12 @@ export const WAVE1_MODULES: ModuleConfig[] = [
     schedule: 'daily',
     primaryKey: ['NEFT ID', 'Reference No'],
     wave: 1,
+    dropdownIterate: {
+      selector: '#ContentPlaceHolder1_DropDownList1',
+      valueKey: 'Payout ID',
+      labelKey: 'Payout Label',
+      searchAfterSelect: true,
+    },
   }),
 ];
 
@@ -127,7 +133,16 @@ export const ADMIN_MODULES: ModuleConfig[] = [
   }),
   // Banking
   mod('bank_to_bank', 'Bank To Bank', ['Banking', 'Bank To Bank']),
-  mod('cash_ledger', 'Cash Ledger', ['Banking', 'Cash Ledger']),
+  mod('cash_ledger', 'Cash Ledger', ['Banking', 'Cash Ledger'], {
+    tableType: 'grid',
+    extractMode: 'grid',
+    dropdownIterate: {
+      selector: '#ContentPlaceHolder1_DropDownList1',
+      valueKey: 'Branch',
+      labelKey: 'Branch Label',
+      searchAfterSelect: true,
+    },
+  }),
   mod('sale_cheques', 'Sale Cheques', ['Banking', 'Sale Cheques']),
   mod('accounting_cheques', 'Accounting Cheques', ['Banking', 'Accounting Cheques']),
   // BP Management
@@ -137,25 +152,67 @@ export const ADMIN_MODULES: ModuleConfig[] = [
   mod('bp_award_achieved', 'BP Award Achieved', ['BP Management', 'BP Award Achieved']),
   mod('new_bp', 'New BP', ['BP Management', 'New BP']),
   mod('bp_bulk_payment', 'BP Bulk Payment', ['BP Management', 'BP Bulk Payment']),
-  mod('bp_income_summary_detail', 'BP Income Summary', ['BP Management', 'BP Income Summary']),
+  mod('bp_income_summary_detail', 'BP Income Summary', ['BP Management', 'BP Income Summary'], {
+    dropdownIterate: {
+      selector: '#ContentPlaceHolder1_PayoutDropDownList',
+      valueKey: 'Payout ID',
+      labelKey: 'Payout Label',
+      searchAfterSelect: true,
+    },
+  }),
   mod('bp_income_reward_emi', 'BP Income Reward EMI', ['BP Management', 'BP Income Reward EMI']),
-  mod('income_by_sale_earning', 'Income by Sale Earning', ['BP Management', 'Income by Sale Earning']),
+  mod('income_by_sale_earning', 'Income by Sale Earning', ['BP Management', 'Income by Sale Earning'], {
+    dropdownIterate: {
+      selector: '#ContentPlaceHolder1_PayoutDropDownList',
+      valueKey: 'Payout ID',
+      labelKey: 'Payout Label',
+      searchAfterSelect: true,
+    },
+  }),
   mod('bp_sale_performance', 'BP Sale Performance', ['BP Management', 'BP Sale Performance']),
   mod('bp_summary_fin_year', 'BP Summary (Fin. Year)', ['BP Management', 'BP Summary (Fin. Year)']),
   mod('bp_award_shares', 'BP Award Shares', ['BP Management', 'BP Award Shares']),
   mod('site_visit_expense', 'Site Visit Expense', ['BP Management', 'Site Visit Expense']),
   // BP Payout
-  mod('income_details', 'Income Details', ['BP Payout', 'Income Details']),
-  mod('downline_income_summary', 'Downline Income Summary', ['BP Payout', 'Downline Income Summary']),
+  mod('income_details', 'Income Details', ['BP Payout', 'Income Details'], {
+    dropdownIterate: {
+      selector: '#ContentPlaceHolder1_DropDownList1, #ContentPlaceHolder1_PayoutDropDownList',
+      valueKey: 'Payout ID',
+      labelKey: 'Payout Label',
+      searchAfterSelect: true,
+    },
+  }),
+  mod('downline_income_summary', 'Downline Income Summary', ['BP Payout', 'Downline Income Summary'], {
+    dropdownIterate: {
+      selector: '#ContentPlaceHolder1_DropDownList1',
+      valueKey: 'Payout ID',
+      labelKey: 'Payout Label',
+      searchAfterSelect: true,
+    },
+  }),
   mod('bp_income_details', 'BP Income Details', ['BP Payout', 'BP Income Details']),
   mod('payout_balance_sheet', 'Payout Balance Sheet', ['BP Payout', 'Payout Balance Sheet']),
   mod('neft_list_reward_emi', 'NEFT List (Reward EMI)', ['BP Payout', 'NEFT List (Reward EMI)']),
   mod('reward_emi_reward_wise', 'Reward EMI (Reward Wise)', ['BP Payout', 'Reward EMI (Reward Wise)']),
-  mod('payout_income_summary', 'Income Summary', ['BP Payout', 'Income Summary']),
+  mod('payout_income_summary', 'Income Summary', ['BP Payout', 'Income Summary'], {
+    dropdownIterate: {
+      selector: '#ContentPlaceHolder1_DropDownList1',
+      valueKey: 'Payout ID',
+      labelKey: 'Payout Label',
+      searchAfterSelect: true,
+    },
+  }),
   mod('reward_booking_details', 'Reward Booking Details', ['BP Payout', 'Reward Booking Details']),
   mod('reward_emi_details', 'Reward EMI Details', ['BP Payout', 'Reward EMI Details']),
   mod('reward_emi_not_achieved', 'Reward EMI Not Achieved', ['BP Payout', 'Reward EMI Not Achieved']),
-  mod('neft_list_reward', 'NEFT List (Reward)', ['BP Payout', 'NEFT List (Reward)']),
+  mod('neft_list_reward', 'NEFT List (Reward)', ['BP Payout', 'NEFT List (Reward)'], {
+    dropdownIterate: {
+      selector: '#ContentPlaceHolder1_DropDownList1',
+      valueKey: 'Payout ID',
+      labelKey: 'Payout Label',
+      searchAfterSelect: true,
+    },
+  }),
   mod('reward_setting', 'Reward Setting', ['BP Payout', 'Reward Setting']),
   // Finder & Editor
   mod('finder_accounting_transactions', 'Accounting Transactions', [
@@ -177,12 +234,84 @@ export const ADMIN_MODULES: ModuleConfig[] = [
   mod('accounting_head', 'Accounting Head', ['Master', 'Accounting Head'], { schedule: 'weekly' }),
   // Raw Management
   mod('registry_list', 'Registry List', ['Raw Management', 'Registry List']),
-  mod('govt_survey_plot', 'Govt. Survey Plot', ['Raw Management', 'Govt. Survey Plot']),
-  mod('plot_list', 'Plot List', ['Raw Management', 'Plot List']),
-  mod('registered_plot_list', 'Registered Plot List', ['Raw Management', 'Registered Plot List']),
+  mod('govt_survey_plot', 'Govt. Survey Plot', ['Raw Management', 'Govt. Survey Plot'], {
+    extractMode: 'grid',
+    dropdownIterate: [
+      {
+        selector: '#ContentPlaceHolder1_ProjectMainDropDownList',
+        valueKey: 'Project ID',
+        labelKey: 'Project',
+        searchAfterSelect: false,
+        waitForOptionsSelector: '#ContentPlaceHolder1_ProjectPhaseDropDownList',
+      },
+      {
+        selector: '#ContentPlaceHolder1_ProjectPhaseDropDownList',
+        valueKey: 'Phase ID',
+        labelKey: 'Phase',
+        searchAfterSelect: true,
+        extractAs: 'grid',
+      },
+    ],
+  }),
+  mod('plot_list', 'Plot List', ['Raw Management', 'Plot List'], {
+    extractMode: 'grid',
+    dropdownIterate: [
+      {
+        selector: '#ContentPlaceHolder1_ProjectMainDropDownList',
+        valueKey: 'Project ID',
+        labelKey: 'Project',
+        searchAfterSelect: false,
+        waitForOptionsSelector: '#ContentPlaceHolder1_ProjectPhaseDropDownList',
+      },
+      {
+        selector: '#ContentPlaceHolder1_ProjectPhaseDropDownList',
+        valueKey: 'Phase ID',
+        labelKey: 'Phase',
+        searchAfterSelect: true,
+        extractAs: 'grid',
+      },
+    ],
+  }),
+  mod('registered_plot_list', 'Registered Plot List', ['Raw Management', 'Registered Plot List'], {
+    extractMode: 'grid',
+    dropdownIterate: [
+      {
+        selector: '#ContentPlaceHolder1_ProjectMainDropDownList',
+        valueKey: 'Project ID',
+        labelKey: 'Project',
+        searchAfterSelect: false,
+        waitForOptionsSelector: '#ContentPlaceHolder1_ProjectPhaseDropDownList',
+      },
+      {
+        selector: '#ContentPlaceHolder1_ProjectPhaseDropDownList',
+        valueKey: 'Phase ID',
+        labelKey: 'Phase',
+        searchAfterSelect: true,
+        extractAs: 'grid',
+      },
+    ],
+  }),
   mod('raw_land_broker', 'Raw Land Broker', ['Raw Management', 'Raw Land Broker']),
   mod('raw_land_owner', 'Raw Land Owner', ['Raw Management', 'Raw Land Owner']),
-  mod('raw_land', 'Raw Land', ['Raw Management', 'Raw Land']),
+  mod('raw_land', 'Raw Land', ['Raw Management', 'Raw Land'], {
+    extractMode: 'form',
+    dropdownIterate: [
+      {
+        selector: '#ContentPlaceHolder1_SearchProjectMainDropDownList',
+        valueKey: 'Project ID',
+        labelKey: 'Project',
+        searchAfterSelect: true,
+        waitForOptionsSelector: '#ContentPlaceHolder1_PhaseDropDownList',
+      },
+      {
+        selector: '#ContentPlaceHolder1_PhaseDropDownList',
+        valueKey: 'Phase ID',
+        labelKey: 'Phase',
+        searchAfterSelect: true,
+        extractAs: 'form',
+      },
+    ],
+  }),
   mod('raw_payments', 'Raw Payments', ['Raw Management', 'Raw Payments']),
   // Sale Report
   mod('booking_performance', 'Booking Performance', ['Sale Report', 'Booking Performance']),

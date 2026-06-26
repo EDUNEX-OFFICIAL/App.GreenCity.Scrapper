@@ -1,33 +1,39 @@
 import type { Page } from 'playwright';
 import {
-  mergeSelectors,
-  type ModuleConfig,
-  type ExtractResult,
-  type ExtractOptions,
+  createLogger,
   jitteredDelay,
   loadConfig,
+  mergeSelectors,
+  type ExtractOptions,
+  type ExtractResult,
+  type ModuleConfig,
 } from '@greencity/shared';
 import type { SessionManager } from '../session/manager.js';
 import { triggerPostBack } from '../webforms/playwright.js';
 import {
+  advanceToGridPage,
   extractGridFromDom,
-  isGarbageGrid,
-  readPagingFromDom,
-  readInlineGridPaging,
-  isPagingComplete,
   goToNextGridPage,
+  isGarbageGrid,
+  isPagingComplete,
+  readInlineGridPaging,
+  readPagingFromDom,
 } from './dom-grid.js';
+import { extractWithDropdownIterate } from './dropdown-iterate.js';
 import { applyPreActions } from './pre-actions.js';
 import { extractFormFields, extractAttachmentMetadata, followDetailLinks } from './detail-chain.js';
 import { tryExportAndParse } from './export-xlsx.js';
 
+const log = createLogger('grid');
+
 export async function extractGrid(
   page: Page,
   config: ModuleConfig,
-  _options?: ExtractOptions,
+  options?: ExtractOptions,
 ): Promise<ExtractResult> {
-  await applyPreActions(page, config);
-
+  if (!options?.skipPreActions) {
+    await applyPreActions(page, config);
+  }
   const exportResult = config.extractMode === 'export-first' ? await tryExportAndParse(page, config) : null;
   if (exportResult && exportResult.rows.length > 0) return exportResult;
 
@@ -35,20 +41,21 @@ export async function extractGrid(
   const columnWarnings: string[] = [];
   if (headers.length === 0) columnWarnings.push('No table headers found');
   if (isGarbageGrid(headers, rows)) {
-    return { rows: [], pagesScraped: 1, columnWarnings: ['Garbage grid detected (pagination widget?)'], usedExport: false };
+    return {
+      rows: [],
+      pagesScraped: 1,
+      columnWarnings: ['Garbage grid detected (pagination widget?)'],
+      usedExport: false,
+    };
   }
 
   let allRows = rows.map((data) => ({ data }));
-
   if (config.extractMode === 'detail-chain' || config.selectors?.detailLinkColumn) {
-    const details = await followDetailLinks(page, config, rows);
+    const details = await followDetailLinks(page, config, rows, options);
     allRows = [...allRows, ...details];
   }
-
   const attachments = await extractAttachmentMetadata(page, config);
-  if (attachments.rows.length > 0) {
-    allRows = [...allRows, ...attachments.rows];
-  }
+  if (attachments.rows.length > 0) allRows = [...allRows, ...attachments.rows];
 
   return { rows: allRows, pagesScraped: 1, columnWarnings, usedExport: false };
 }
@@ -56,12 +63,13 @@ export async function extractGrid(
 export async function extractPaginatedGrid(
   page: Page,
   config: ModuleConfig,
-  _session: SessionManager,
+  _session: SessionManager | null,
   options?: ExtractOptions,
 ): Promise<ExtractResult> {
   const cfg = loadConfig();
-  await applyPreActions(page, config);
-
+  if (!options?.skipPreActions) {
+    await applyPreActions(page, config);
+  }
   if (config.extractMode === 'export-first') {
     const exportResult = await tryExportAndParse(page, config);
     if (exportResult && exportResult.rows.length > 0) return exportResult;
@@ -76,7 +84,6 @@ export async function extractPaginatedGrid(
   const streamPages = Boolean(options?.onPage);
   const pageStart = options?.pageStart ?? 1;
   const pageEnd = options?.pageEnd ?? maxPages;
-  // Always paginate from page 1 (proven path); skip upsert until pageStart.
   const maxIter = Math.min(maxPages, Math.max(1, pageEnd));
 
   if (pagingMode !== 'inline-grid') {
@@ -99,17 +106,58 @@ export async function extractPaginatedGrid(
   }
 
   let absolutePage = 1;
+  if (pageStart > 1) {
+    absolutePage = await advanceToGridPage(page, config, pageStart);
+    if (absolutePage >= pageStart) {
+      log.info({ pageStart, absolutePage }, 'Resumed at grid page');
+    } else {
+      log.warn({ pageStart, absolutePage }, 'Could not reach resume page — scraping from current page forward');
+    }
+  }
 
   for (let i = 0; i < maxIter; i++) {
+    if (absolutePage < pageStart) {
+      const paging = await readPagingFromDom(page, config);
+      const inline = await readInlineGridPaging(page, config);
+      if (isPagingComplete(paging, paging?.end ?? 0, inline, pagingMode)) break;
+
+      let advanced = false;
+      if (pagingMode === 'inline-grid' || (pagingMode === 'auto' && inline && !paging)) {
+        if (inline?.hasNext) advanced = await goToNextGridPage(page, config, inline);
+        if (advanced && inline) absolutePage = inline.currentPage + 1;
+      } else if (paging) {
+        const pageSize = Math.max(1, paging.end - paging.start + 1);
+        const currentPage = Math.ceil(paging.end / pageSize);
+        advanced = await goToNextGridPage(page, config, {
+          currentPage,
+          pageNumbers: inline?.pageNumbers ?? [],
+          hasNext: true,
+        });
+        if (advanced) absolutePage = currentPage + 1;
+      }
+      if (!advanced) break;
+      await jitteredDelay(cfg.scraperDelayMs);
+      continue;
+    }
+
     const { headers, rows } = await extractGridFromDom(page, config);
-    if (i === 0 && headers.length === 0) columnWarnings.push('No table headers found');
+    const pageNum = absolutePage;
+    const inRange = pageNum >= pageStart && pageNum <= pageEnd;
+
+    if (i === 0 && headers.length === 0 && pageNum >= pageStart) {
+      columnWarnings.push('No table headers found');
+    }
+    if (headers.length === 0 && inRange && options?.onPageFailed) {
+      await options.onPageFailed(pageNum, 'No table headers found');
+    }
     if (isGarbageGrid(headers, rows)) {
       columnWarnings.push('Garbage grid detected — skipping page');
+      if (inRange && options?.onPageFailed) {
+        await options.onPageFailed(pageNum, 'Garbage grid detected — skipping page');
+      }
       break;
     }
 
-    const pageNum = absolutePage;
-    const inRange = pageNum >= pageStart && pageNum <= pageEnd;
     if (inRange) {
       if (options?.onPage) {
         await options.onPage(rows, pageNum);
@@ -128,7 +176,13 @@ export async function extractPaginatedGrid(
     if (pagingMode === 'inline-grid' || (pagingMode === 'auto' && inline && !paging)) {
       if (!inline?.hasNext) break;
       const advanced = await goToNextGridPage(page, config, inline);
-      if (!advanced) break;
+      if (!advanced) {
+        const failedPage = inline.currentPage + 1;
+        if (failedPage >= pageStart && failedPage <= pageEnd && options?.onPageFailed) {
+          await options.onPageFailed(failedPage, 'Pagination advance failed');
+        }
+        break;
+      }
       absolutePage = inline.currentPage + 1;
       await jitteredDelay(cfg.scraperDelayMs);
       continue;
@@ -139,35 +193,33 @@ export async function extractPaginatedGrid(
     const pageNumbers = inline?.pageNumbers ?? [];
     const pageSize = Math.max(1, paging.end - paging.start + 1);
     const currentPage = Math.ceil(paging.end / pageSize);
-    const nextPageNum = pageNumbers.find((n) => n > currentPage) ?? currentPage + 1;
-
     const advanced = await goToNextGridPage(page, config, {
       currentPage,
       pageNumbers,
       hasNext: true,
     });
-    if (!advanced) break;
+    if (!advanced) {
+      const failedPage = currentPage + 1;
+      if (failedPage >= pageStart && failedPage <= pageEnd && options?.onPageFailed) {
+        await options.onPageFailed(failedPage, 'Pagination advance failed');
+      }
+      break;
+    }
     absolutePage = currentPage + 1;
     await jitteredDelay(cfg.scraperDelayMs);
   }
 
   if (!streamPages && (config.extractMode === 'detail-chain' || config.selectors?.detailLinkColumn)) {
     const parentRows = allRows.map((r) => r.data);
-    const details = await followDetailLinks(page, config, parentRows.slice(0, 50));
+    const details = await followDetailLinks(page, config, parentRows.slice(0, 50), options);
     allRows.push(...details);
   }
-
   if (!streamPages) {
     const attachments = await extractAttachmentMetadata(page, config);
     allRows.push(...attachments.rows);
   }
 
-  return {
-    rows: streamPages ? [] : allRows,
-    pagesScraped,
-    columnWarnings,
-    usedExport: false,
-  };
+  return { rows: streamPages ? [] : allRows, pagesScraped, columnWarnings, usedExport: false };
 }
 
 export async function extractReport(
@@ -179,18 +231,16 @@ export async function extractReport(
   const allRows: ExtractResult['rows'] = [];
   const columnWarnings: string[] = [];
   let pagesScraped = 0;
-
   const backfill = config.backfill;
   if (!backfill || backfill.type === 'none') {
-    return extractPaginatedGrid(page, config, null as unknown as SessionManager, options);
+    return extractPaginatedGrid(page, config, null, options);
   }
 
   const dates = generateDateRange(backfill.type, backfill.fixedFrom);
   for (const date of dates) {
     await applyDateFilter(page, date, backfill.type);
     await jitteredDelay(cfg.scraperDelayMs);
-
-    const result = await extractPaginatedGrid(page, config, null as unknown as SessionManager, options);
+    const result = await extractPaginatedGrid(page, config, null, options);
     allRows.push(...result.rows.map((r) => ({ ...r, data: { ...r.data, _report_date: date } })));
     columnWarnings.push(...result.columnWarnings);
     pagesScraped += result.pagesScraped;
@@ -200,12 +250,10 @@ export async function extractReport(
 }
 
 async function applyDateFilter(page: Page, date: string, type: string): Promise<void> {
-  const dateInput = page.locator(
-    'input[type="date"], input[id*="Date" i], input[name*="Date" i], input[id*="txtDate" i]',
-  ).first();
-  if (await dateInput.count()) {
-    await dateInput.fill(date);
-  }
+  const dateInput = page
+    .locator('input[type="date"], input[id*="Date" i], input[name*="Date" i], input[id*="txtDate" i]')
+    .first();
+  if (await dateInput.count()) await dateInput.fill(date);
 
   const monthSelect = page.locator('select[id*="Month" i], select[name*="Month" i]').first();
   if (type === 'monthly' && (await monthSelect.count())) {
@@ -215,9 +263,9 @@ async function applyDateFilter(page: Page, date: string, type: string): Promise<
     if (await yearInput.count()) await yearInput.fill(y);
   }
 
-  const searchBtn = page.locator(
-    'input[type="submit"][value*="Search" i], input[id*="btnSearch" i], button:has-text("Search")',
-  ).first();
+  const searchBtn = page
+    .locator('input[type="submit"][value*="Search" i], input[id*="btnSearch" i], button:has-text("Search")')
+    .first();
   if (await searchBtn.count()) {
     await searchBtn.click();
     await page.waitForLoadState('domcontentloaded');
@@ -238,11 +286,8 @@ function generateDateRange(type: string, fixedFrom?: string): string[] {
       dates.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`);
     }
   } else if (type === 'yearly') {
-    for (let y = start.getFullYear(); y <= end.getFullYear(); y++) {
-      dates.push(String(y));
-    }
+    for (let y = start.getFullYear(); y <= end.getFullYear(); y++) dates.push(String(y));
   }
-
   return dates;
 }
 
@@ -253,12 +298,13 @@ export async function runExtractor(
   options?: ExtractOptions,
 ): Promise<ExtractResult> {
   const mode = config.extractMode;
-
+  if (config.dropdownIterate) {
+    return extractWithDropdownIterate(page, config, session, options);
+  }
   if (mode === 'form') {
     await applyPreActions(page, config);
     return extractFormFields(page, config);
   }
-
   if (mode === 'export-first') {
     await applyPreActions(page, config);
     const exportResult = await tryExportAndParse(page, config);
@@ -269,6 +315,9 @@ export async function runExtractor(
     case 'grid':
       return extractGrid(page, config, options);
     case 'paginated-grid':
+      if (config.dropdownIterate) {
+        return extractWithDropdownIterate(page, config, session, options);
+      }
       return extractPaginatedGrid(page, config, session, options);
     case 'report-filter':
       return extractReport(page, config, options);

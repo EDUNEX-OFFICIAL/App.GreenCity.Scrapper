@@ -21,6 +21,7 @@
     "@greencity/shared": "workspace:*"
   },
   "devDependencies": {
+    "@types/node": "^22.15.21",
     "prisma": "^6.8.2",
     "typescript": "^5.8.3"
   }

@@ -13,10 +13,16 @@ export async function triggerPostBack(
   eventTarget: string,
   eventArgument = '',
 ): Promise<void> {
-  await page.waitForSelector('#aspnetForm', { state: 'attached', timeout: 60000 });
+  await page.waitForSelector('#aspnetForm, #form1, form[name="aspnetForm"]', {
+    state: 'attached',
+    timeout: 60000,
+  });
   await page.evaluate(
     ({ target, argument }) => {
-      const form = document.getElementById('aspnetForm') as HTMLFormElement | null;
+      const form =
+        (document.getElementById('aspnetForm') as HTMLFormElement | null) ??
+        (document.getElementById('form1') as HTMLFormElement | null) ??
+        (document.querySelector('form[name="aspnetForm"]') as HTMLFormElement | null);
       if (!form) throw new Error('aspnetForm not found');
       const targetInput = form.querySelector('[name="__EVENTTARGET"]') as HTMLInputElement | null;
       const argInput = form.querySelector('[name="__EVENTARGUMENT"]') as HTMLInputElement | null;

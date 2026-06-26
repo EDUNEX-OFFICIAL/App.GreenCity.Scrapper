@@ -6,6 +6,8 @@ export interface GenealogyNodeRef {
   bpCode: string;
   bpName?: string;
   label?: string;
+  /** Binary: left/right leg; sponsor: sponsor */
+  leg?: GenealogyLeg;
 }
 
 export interface GenealogyModalData {
@@ -13,6 +15,10 @@ export interface GenealogyModalData {
   leftPoint?: string;
   rightPoint?: string;
   selfPoint?: string;
+  leftChildBpCode?: string;
+  leftChildName?: string;
+  rightChildBpCode?: string;
+  rightChildName?: string;
   sponsorBpId?: string;
   sponsorName?: string;
   percentage?: string;
@@ -34,6 +40,8 @@ export interface GenealogyJobPayload {
   password?: string;
   parentRunId?: string;
   triggeredBy?: string;
+  /** When true, batch only enqueues BPs with failed/missing genealogy (admin-panel retry). */
+  retryFailedOnly?: boolean;
 }
 
 export type BpHarvestModuleName = 'profile' | 'genealogy';

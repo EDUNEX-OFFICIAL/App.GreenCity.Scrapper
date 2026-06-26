@@ -6,21 +6,28 @@
     "dev": "next dev -p 3010",
     "build": "next build",
     "start": "next start -p 3010",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:integration": "VITEST=true vitest run"
   },
   "dependencies": {
+    "@asteasolutions/zod-to-openapi": "^8.5.0",
     "@greencity/db": "workspace:*",
     "@greencity/queue": "workspace:*",
     "@greencity/shared": "workspace:*",
     "ioredis": "^5.6.1",
     "next": "^15.3.3",
+    "rate-limiter-flexible": "^11.2.0",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "swagger-ui-react": "^5.32.8",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^22.15.21",
     "@types/react": "^19.1.6",
     "@types/react-dom": "^19.1.5",
-    "typescript": "^5.8.3"
+    "@types/swagger-ui-react": "^5.18.0",
+    "typescript": "^5.8.3",
+    "vitest": "^2.1.9"
   }
 }

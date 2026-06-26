@@ -6,10 +6,20 @@ export {
 } from './session-manager.js';
 export { BrowserPool, isBrowserPoolEnabled, registerBrowserPoolShutdown } from './browser-pool.js';
 export {
+  safeClosePage,
+  safeCloseContext,
+  closeNewPages,
+  withExtraPage,
+  withIsolatedContext,
+  contextLeakThreshold,
+  warnIfContextLeak,
+} from './browser-resources.js';
+export {
   AdminContextManager,
   isAdminContextEnabled,
   shutdownAdminContext,
 } from './admin-context.js';
+export { withAdminPanelLock, findBpListRow } from './admin-panel-lock.js';
 export { withRetry, type RetryOptions } from './retry.js';
 export { withPortalRetry } from './portal-retry.js';
 export {
@@ -36,12 +46,22 @@ export {
 } from './bp-module.js';
 export { ProfileModule } from './modules/profile-module.js';
 export { GenealogyModule } from './modules/genealogy-module.js';
-export { createBpModuleRegistry, runBpModules, getGenealogyAuthMode } from './bp-harvest.js';
+export { createBpModuleRegistry, runBpModules, getGenealogyAuthMode, shouldUseHttpGenealogyHarvest, isAdminPanelHttpHybridEnabled } from './bp-harvest.js';
 export { NetworkCapture, type CapturedRequest } from './network-capture.js';
 export {
   fetchGenealogyViaHttp,
+  fetchBothGenealogyViaHttp,
+  isHttpGenealogyConfigured,
+  isHttpGenealogyHtmlEnabled,
+  isHttpGenealogyOnly,
+  getGenealogyWorkerConcurrency,
   compareHarvestResults,
   cookieHeaderFromStorageState,
   suggestGenealogyHttpEndpoints,
   type HttpHarvestConfig,
 } from './http-harvest.js';
+export {
+  parseDtreeNodes,
+  buildGenealogyResultFromDtreeHtml,
+  fetchGenealogyHtmlPage,
+} from './genealogy-html-harvest.js';

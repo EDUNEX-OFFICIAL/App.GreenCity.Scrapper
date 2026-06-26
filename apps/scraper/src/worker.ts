@@ -14,6 +14,13 @@ import { runBackfillOrchestrator } from './backfill.js';
 
 const log = createLogger('worker');
 
+const workerTimers: ReturnType<typeof setInterval>[] = [];
+
+export function clearWorkerTimers(): void {
+  for (const timer of workerTimers) clearInterval(timer);
+  workerTimers.length = 0;
+}
+
 export async function reconcileRuns(): Promise<{ stale: number; pending: number }> {
   const stale = await reconcileStaleRuns(15);
   const pending = await reconcilePendingRuns(60);
@@ -46,8 +53,8 @@ export async function startWorker(): Promise<Worker<ScrapeJobPayload>> {
   worker.on('failed', (job, err) => log.error({ jobId: job?.id, err: err.message }, 'Job failed'));
 
   await setWorkerHeartbeat();
-  setInterval(() => setWorkerHeartbeat().catch(() => undefined), 30_000);
-  setInterval(() => reconcileRuns().catch(() => undefined), 5 * 60_000);
+  workerTimers.push(setInterval(() => setWorkerHeartbeat().catch(() => undefined), 30_000));
+  workerTimers.push(setInterval(() => reconcileRuns().catch(() => undefined), 5 * 60_000));
 
   log.info({ concurrency: cfg.scraperConcurrency }, 'Worker started');
   return worker;

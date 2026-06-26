@@ -5,6 +5,7 @@ import { chromium } from 'playwright';
 import { adminUrl, createLogger, loadConfig, type AppConfig } from '@greencity/shared';
 import { BrowserPool, isBrowserPoolEnabled } from './browser-pool.js';
 import { applyResourceBlocking } from './resource-blocker.js';
+import { safeCloseContext, safeClosePage } from './browser-resources.js';
 
 const log = createLogger('session');
 
@@ -44,7 +45,7 @@ export class SessionManager {
 
   async close(): Promise<void> {
     if (this.ownsBrowser && this.browser) {
-      await this.browser.close();
+      await this.browser.close().catch(() => undefined);
       this.browser = null;
     }
   }
@@ -71,11 +72,16 @@ export class SessionManager {
       }
     }
     const hasState = await this.hasStorageState(portal);
+    return this.newIsolatedContext(hasState ? path : undefined);
+  }
+
+  /** Isolated browser context (admin or BP). Prefer `withIsolatedContext` when possible. */
+  async newIsolatedContext(storageStatePath?: string): Promise<BrowserContext> {
     if (isBrowserPoolEnabled()) {
-      return BrowserPool.getInstance(this.config).newContext(hasState ? path : undefined);
+      return BrowserPool.getInstance(this.config).newContext(storageStatePath);
     }
     const browser = await this.getBrowser();
-    const context = await browser.newContext(hasState ? { storageState: path } : {});
+    const context = await browser.newContext(storageStatePath ? { storageState: storageStatePath } : {});
     await applyResourceBlocking(context);
     return context;
   }
@@ -142,6 +148,18 @@ export class SessionManager {
     }
   }
 
+  async withIsolatedContext<T>(
+    fn: (context: BrowserContext) => Promise<T>,
+    storageStatePath?: string,
+  ): Promise<T> {
+    const context = await this.newIsolatedContext(storageStatePath);
+    try {
+      return await fn(context);
+    } finally {
+      await safeCloseContext(context);
+    }
+  }
+
   async withAdminPage<T>(
     fn: (page: Page) => Promise<T>,
     opts?: { directUrl?: string },
@@ -163,8 +181,8 @@ export class SessionManager {
       }
       return await fn(page);
     } finally {
-      await page.close();
-      await context.close();
+      await safeClosePage(page);
+      await safeCloseContext(context);
     }
   }
 }

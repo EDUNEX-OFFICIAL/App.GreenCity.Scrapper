@@ -45,8 +45,15 @@ export async function runGenealogyBatchJob(payload: GenealogyJobPayload): Promis
 
   let bps = await getBpListEntriesForGenealogy();
   const completedSet = await getCompletedBpCodes();
-  const skipped = bps.filter((bp) => completedSet.has(bp.bpCode));
-  bps = bps.filter((bp) => !completedSet.has(bp.bpCode));
+  const skipped = bps.filter((bp) => bp.uid && completedSet.has(bp.uid));
+
+  if (payload.retryFailedOnly) {
+    // After clearing failed stubs, use incomplete BPs (missing sponsor and/or binary OK).
+    bps = bps.filter((bp) => !bp.uid || !completedSet.has(bp.uid));
+    log.info({ retryCount: bps.length }, 'Retry-failed-only batch — enqueueing incomplete BPs');
+  } else {
+    bps = bps.filter((bp) => !bp.uid || !completedSet.has(bp.uid));
+  }
   if (maxBps && Number.isFinite(maxBps)) bps = bps.slice(0, maxBps);
 
   const prisma = (await import('@greencity/db')).getPrisma();
@@ -61,6 +68,7 @@ export async function runGenealogyBatchJob(payload: GenealogyJobPayload): Promis
         completed: 0,
         failed: 0,
         skipped: skipped.length,
+        retryFailedOnly: payload.retryFailedOnly ?? false,
         orderStrategy,
         firstBp: bps[0]?.bpCode ?? null,
         lastBp: bps[bps.length - 1]?.bpCode ?? null,
@@ -103,6 +111,7 @@ export async function runGenealogyBatchJob(payload: GenealogyJobPayload): Promis
         completed: 0,
         failed: 0,
         skipped: skipped.length,
+        retryFailedOnly: payload.retryFailedOnly ?? false,
         orderStrategy,
         firstBp: bps[0]?.bpCode ?? null,
         lastBp: bps[bps.length - 1]?.bpCode ?? null,

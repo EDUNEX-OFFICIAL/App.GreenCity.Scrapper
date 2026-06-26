@@ -1,5 +1,6 @@
 import type { Page } from 'playwright';
 import { adminUrl, createLogger, loadConfig } from '@greencity/shared';
+import { safeCloseContext, safeClosePage } from './browser-resources.js';
 import { SessionManager } from './session-manager.js';
 
 const log = createLogger('admin-context');
@@ -85,7 +86,11 @@ export class AdminContextManager {
 
   async recover(): Promise<Page> {
     if (this.adminPage && !this.adminPage.isClosed()) {
-      await this.adminPage.context().close().catch(() => undefined);
+      const context = this.adminPage.context();
+      for (const page of context.pages()) {
+        await safeClosePage(page);
+      }
+      await safeCloseContext(context);
     }
     this.adminPage = null;
     return this.getAdminPage();
@@ -93,8 +98,8 @@ export class AdminContextManager {
 
   async shutdown(): Promise<void> {
     if (this.adminPage && !this.adminPage.isClosed()) {
-      await this.adminPage.close().catch(() => undefined);
-      await this.adminPage.context().close().catch(() => undefined);
+      await safeClosePage(this.adminPage);
+      await safeCloseContext(this.adminPage.context());
     }
     this.adminPage = null;
     await this.session.close();

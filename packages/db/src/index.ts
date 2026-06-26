@@ -2,3 +2,8 @@ export * from './client.js';
 export * from './upsert.js';
 export * from './reconcile.js';
 export * from './genealogy.js';
+export * from './reset.js';
+export * from './preview.js';
+export * from './module-data.js';
+export * from './integration.js';
+export * from './genealogy-alias.js';

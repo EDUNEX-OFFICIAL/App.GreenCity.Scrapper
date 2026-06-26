@@ -50,6 +50,13 @@ enum GenealogyLeg {
   @@schema("ingest")
 }
 
+enum ScrapeRowStatus {
+  ok
+  failed
+
+  @@schema("ingest")
+}
+
 model ScrapeRun {
   id            String          @id @default(cuid())
   moduleKey     String
@@ -76,19 +83,25 @@ model ScrapeRun {
 }
 
 model RawModuleRow {
-  id          String    @id @default(cuid())
-  moduleKey   String
-  portal      Portal
-  bpCode      String?
-  rowJson     Json
-  rowHash     String    @unique
-  firstSeenAt DateTime  @default(now())
-  lastSeenAt  DateTime  @default(now())
-  scrapeRunId String
-  scrapeRun   ScrapeRun @relation(fields: [scrapeRunId], references: [id], onDelete: Cascade)
+  id           String          @id @default(cuid())
+  moduleKey    String
+  portal       Portal
+  bpCode       String?
+  rowJson      Json
+  rowHash      String          @unique
+  scrapeStatus ScrapeRowStatus @default(ok)
+  scrapeError  String?
+  failedRef    String?
+  firstSeenAt  DateTime        @default(now())
+  lastSeenAt   DateTime        @default(now())
+  scrapeRunId  String
+  scrapeRun    ScrapeRun       @relation(fields: [scrapeRunId], references: [id], onDelete: Cascade)
 
+  @@unique([moduleKey, failedRef])
   @@index([moduleKey, portal])
+  @@index([moduleKey, lastSeenAt])
   @@index([moduleKey, bpCode])
+  @@index([moduleKey, scrapeStatus])
   @@index([lastSeenAt])
   @@schema("ingest")
 }
@@ -137,17 +150,21 @@ model GenealogyNode {
   id            String            @id @default(cuid())
   bpCode        String
   bpName        String?
-  uid           String?
+  uid           String
   treeType      GenealogyTreeType
   modalData     Json              @default("{}")
   childrenJson  Json              @default("[]")
+  scrapeStatus  ScrapeRowStatus   @default(ok)
+  scrapeError   String?
   scrapeRunId   String
   scrapedAt     DateTime          @default(now())
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
 
-  @@unique([bpCode, treeType])
+  @@unique([uid, treeType])
+  @@index([bpCode])
   @@index([treeType])
+  @@index([scrapeStatus])
   @@index([scrapeRunId])
   @@schema("ingest")
 }

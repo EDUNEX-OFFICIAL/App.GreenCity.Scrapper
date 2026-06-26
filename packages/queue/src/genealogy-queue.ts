@@ -1,6 +1,6 @@
 import { Queue, type JobsOptions } from 'bullmq';
 import type { GenealogyJobPayload } from '@greencity/shared';
-import { getRedisConnection } from './index.js';
+import { getRedisConnection } from './connection.js';
 import { jobEnqueueDelayMs } from './enqueue-stagger.js';
 
 export const GENEALOGY_QUEUE_NAME = 'greencity-genealogy-scrape';

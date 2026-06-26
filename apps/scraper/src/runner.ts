@@ -11,7 +11,9 @@ import {
   createScrapeRun,
   finishScrapeRun,
   upsertModuleRows,
+  upsertFailedModuleRow,
   recordScrapeFailure,
+  clearFailedPageRef,
 } from '@greencity/db';
 import { SessionManager, saveFailureHtml } from './session/manager.js';
 import { runExtractor } from './extractors/grid.js';
@@ -50,6 +52,12 @@ export async function runAdminModuleJob(payload: ScrapeJobPayload): Promise<void
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     log.error({ moduleKey: payload.moduleKey, err: message }, 'Module scrape failed');
+    await upsertFailedModuleRow({
+      moduleKey: payload.moduleKey,
+      portal: 'admin',
+      scrapeRunId: run.id,
+      error: message,
+    });
     await finishScrapeRun(run.id, {
       status: 'failed',
       rowCount: 0,
@@ -81,7 +89,9 @@ async function runAdminModule(
       : config;
 
   const streamPages =
-    effectiveConfig.tableType === 'paginated-grid' || Boolean(effectiveConfig.upsertPerPage);
+    (effectiveConfig.tableType === 'paginated-grid' || Boolean(effectiveConfig.upsertPerPage)) &&
+    !effectiveConfig.dropdownIterate &&
+    effectiveConfig.extractMode !== 'form';
 
   let totalInserted = 0;
   let totalUpdated = 0;
@@ -95,11 +105,11 @@ async function runAdminModule(
     }
     await jitteredDelay(cfg.scraperDelayMs);
 
-    const extractOptions = streamPages
-      ? {
-          pageStart: payload.pageStart,
-          pageEnd: payload.pageEnd,
-          onPage: async (rows: Record<string, string>[], pageNum: number) => {
+    const extractOptions = {
+      pageStart: payload.pageStart,
+      pageEnd: payload.pageEnd,
+      onPage: streamPages
+        ? async (rows: Record<string, string>[], pageNum: number) => {
             if (rows.length === 0) return;
             const upsert = await upsertModuleRows({
               moduleKey: effectiveConfig.key,
@@ -111,6 +121,7 @@ async function runAdminModule(
             totalUpdated += upsert.updated;
             totalRows += rows.length;
             lastPage = pageNum;
+            await clearFailedPageRef(effectiveConfig.key, pageNum);
             await prisma.scrapeRun.update({
               where: { id: runId },
               data: {
@@ -128,9 +139,27 @@ async function runAdminModule(
                 },
               },
             });
-          },
-        }
-      : undefined;
+          }
+        : undefined,
+      onPageFailed: async (pageNum: number, error: string) => {
+        await upsertFailedModuleRow({
+          moduleKey: effectiveConfig.key,
+          portal: 'admin',
+          scrapeRunId: runId,
+          pageNum,
+          error,
+        });
+      },
+      onDetailFailed: async (identifiers: Record<string, string>, error: string) => {
+        await upsertFailedModuleRow({
+          moduleKey: effectiveConfig.key,
+          portal: 'admin',
+          scrapeRunId: runId,
+          identifiers,
+          error,
+        });
+      },
+    };
 
     const result = await runExtractor(page, effectiveConfig, session, extractOptions);
 

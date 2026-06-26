@@ -8,7 +8,7 @@ import { join } from 'node:path';
 import { createLogger, loadConfig } from '@greencity/shared';
 import { NetworkCapture, suggestGenealogyHttpEndpoints } from '@greencity/scraper-core';
 import { SessionManager } from './session/manager.js';
-import { openBpPanelFromAdminList, gotoGenealogyTree } from './session/panel.js';
+import { withBpPanel, gotoGenealogyTree } from './session/panel.js';
 import { parseNodeModal, parseVisibleTreeNodes } from './extractors/genealogy-tree.js';
 
 const log = createLogger('cli-inspect-genealogy');
@@ -16,18 +16,18 @@ const log = createLogger('cli-inspect-genealogy');
 async function main(): Promise<void> {
   loadConfig();
   const bpCode = process.env.GENEALOGY_INSPECT_BP ?? 'RD11237858';
+  const password = process.env.GENEALOGY_INSPECT_PASSWORD;
   log.info({ bpCode }, 'Starting genealogy inspect + network capture');
 
   const capture = new NetworkCapture();
   const session = new SessionManager();
+  const detachListeners: Array<() => void> = [];
   try {
-    await session.withAdminPage(
-      async (adminPage) => {
-        capture.attach(adminPage);
-        capture.setPhase('panel_open');
-        const uid = process.env.GENEALOGY_INSPECT_UID;
-        const { bpPage } = await openBpPanelFromAdminList(session, adminPage, bpCode, { uid });
-        capture.attach(bpPage);
+    await withBpPanel(
+      session,
+      bpCode,
+      async (bpPage) => {
+        detachListeners.push(capture.attach(bpPage));
         log.info({ url: bpPage.url() }, 'BP panel URL');
 
         for (const treeType of ['sponsor', 'binary'] as const) {
@@ -48,10 +48,8 @@ async function main(): Promise<void> {
             log.info({ treeType, modalKeys: Object.keys(modal.raw ?? {}) }, 'Node modal data');
           }
         }
-
-        await bpPage.close();
       },
-      { directUrl: '/membermanagement/AdminMemberList.aspx' },
+      { password, uid: process.env.GENEALOGY_INSPECT_UID },
     );
 
     const reportDir = process.env.NETWORK_CAPTURE_DIR ?? './.data/network-capture';
@@ -70,6 +68,7 @@ async function main(): Promise<void> {
 
     log.info({ reportPath, jsonPath, captureCount: capture.getCaptures().length }, 'Network capture report saved');
   } finally {
+    for (const detach of detachListeners) detach();
     await session.close();
   }
 }

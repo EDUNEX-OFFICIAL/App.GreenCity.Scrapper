@@ -1,6 +1,6 @@
 import type { Page } from 'playwright';
 import type { ModuleConfig, PagingMode } from '@greencity/shared';
-import { mergeSelectors } from '@greencity/shared';
+import { mergeSelectors, loadConfig, jitteredDelay } from '@greencity/shared';
 import { extractGridFromDomFn, readInlineGridPagingFn } from './dom-grid.browser.js';
 
 export interface DomGridResult {
@@ -16,6 +16,18 @@ export interface InlineGridPaging {
 
 export function isGarbageGrid(headers: string[], rows: Record<string, string>[]): boolean {
   if (headers.length === 0 && rows.length === 0) return true;
+
+  const dataGridHeaders = headers.some((h) =>
+    /^(Option|SlNo|SrNo|Name|Point|Plot|Area|Booking|Sale ID|UID|BP ID)/i.test(h.trim()),
+  );
+  if (dataGridHeaders && rows.length > 0) {
+    const hasRealData = rows.some((row) =>
+      Object.entries(row).some(
+        ([k, v]) => !k.endsWith('_href') && !k.endsWith('_value') && /[a-zA-Z]{2,}/.test(v),
+      ),
+    );
+    if (hasRealData) return false;
+  }
 
   const numericHeaders = headers.filter((h) => /^\d+$/.test(h.trim()) || h.trim() === '...');
   if (headers.length > 0 && numericHeaders.length >= headers.length * 0.7) return true;
@@ -41,13 +53,22 @@ export function isGarbageGrid(headers: string[], rows: Record<string, string>[])
 
 export async function extractGridFromDom(page: Page, config: ModuleConfig): Promise<DomGridResult> {
   const selectors = mergeSelectors(config.selectors);
-  const grid = page.locator(selectors.grid).first();
+  const gridSelector = selectors.grid ?? 'table[id*="GridView"]';
 
-  if ((await grid.count()) === 0) {
-    return { headers: [], rows: [] };
+  const byId = await page.$('#ContentPlaceHolder1_GridView1');
+  if (byId) {
+    const direct = await byId.evaluate(extractGridFromDomFn);
+    if (direct.rows.length > 0) return direct;
   }
 
-  return grid.evaluate(extractGridFromDomFn);
+  const grids = page.locator(gridSelector);
+  const count = await grids.count();
+  let best: DomGridResult = { headers: [], rows: [] };
+  for (let i = 0; i < count; i++) {
+    const parsed = await grids.nth(i).evaluate(extractGridFromDomFn);
+    if (parsed.rows.length > best.rows.length) best = parsed;
+  }
+  return best;
 }
 
 export interface PortalPaging {
@@ -119,6 +140,101 @@ export async function getGridPageNumbers(page: Page, config?: ModuleConfig): Pro
   });
 }
 
+/** Jump to a grid page when the portal pager exposes that page number. */
+export async function goToGridPage(
+  page: Page,
+  config: ModuleConfig,
+  targetPage: number,
+): Promise<boolean> {
+  if (targetPage <= 1) return true;
+
+  const selectors = mergeSelectors(config.selectors);
+  const grid = page.locator(selectors.grid).first();
+  const pageLink = grid.locator(`a[href*="Page$${targetPage}"]`).first();
+
+  if ((await pageLink.count()) > 0) {
+    await pageLink.click();
+    await page.waitForLoadState('domcontentloaded');
+  } else {
+    const html = await page.content();
+    const gridTarget =
+      html.match(/__doPostBack\(['"](ctl00\$ContentPlaceHolder1\$GridView1)['"]/i)?.[1] ??
+      html.match(/__doPostBack\(['"](ctl00\$[^'"]*GridView\d*)['"]/i)?.[1] ??
+      'ctl00$ContentPlaceHolder1$GridView1';
+
+    const { triggerGridPage } = await import('../webforms/playwright.js');
+    await triggerGridPage(page, gridTarget, targetPage);
+    await page.waitForLoadState('domcontentloaded');
+  }
+
+  const cfg = loadConfig();
+  await jitteredDelay(cfg.scraperDelayMs);
+
+  const detected = await detectCurrentGridPage(page, config);
+  return detected >= targetPage - 1;
+}
+
+/** Advance pager toward target page using visible page links and >> skips. */
+export async function advanceToGridPage(
+  page: Page,
+  config: ModuleConfig,
+  targetPage: number,
+): Promise<number> {
+  if (targetPage <= 1) return 1;
+
+  const cfg = loadConfig();
+  const selectors = mergeSelectors(config.selectors);
+  const grid = page.locator(selectors.grid).first();
+
+  let current = await detectCurrentGridPage(page, config);
+  if (current >= targetPage) return current;
+
+  const firstHop = Math.min(10, targetPage);
+  if (current < firstHop) {
+    await goToGridPage(page, config, firstHop);
+    current = await detectCurrentGridPage(page, config);
+  }
+
+  let guard = 0;
+  while (current < targetPage && guard < 500) {
+    guard++;
+    const inline = await readInlineGridPaging(page, config);
+    const pageNumbers = inline?.pageNumbers ?? [];
+    const nextVisible = [...pageNumbers].filter((n) => n > current && n <= targetPage).pop();
+
+    if (nextVisible) {
+      const link = grid.locator(`a[href*="Page$${nextVisible}"]`).first();
+      if ((await link.count()) > 0) {
+        await link.click();
+        await page.waitForLoadState('domcontentloaded');
+        await jitteredDelay(cfg.scraperDelayMs);
+        current = await detectCurrentGridPage(page, config);
+        continue;
+      }
+      await goToGridPage(page, config, nextVisible);
+      current = await detectCurrentGridPage(page, config);
+      continue;
+    }
+
+    if (!inline?.hasNext) break;
+
+    const skipLink = grid.locator('a').filter({ hasText: /^>>$/ }).first();
+    if ((await skipLink.count()) > 0) {
+      await skipLink.click();
+      await page.waitForLoadState('domcontentloaded');
+      await jitteredDelay(cfg.scraperDelayMs);
+      current = await detectCurrentGridPage(page, config);
+      continue;
+    }
+
+    const advanced = await goToNextGridPage(page, config, inline);
+    if (!advanced) break;
+    current = await detectCurrentGridPage(page, config);
+  }
+
+  return current;
+}
+
 export async function goToNextGridPage(
   page: Page,
   config: ModuleConfig,
@@ -166,4 +282,30 @@ export async function countGridDataRows(page: Page, config: ModuleConfig): Promi
   if ((await grid.count()) === 0) return 0;
   const { rows } = await extractGridFromDom(page, config);
   return rows.length;
+}
+
+/** Infer current 1-based grid page from inline pager, lblPaging, or first SrNo row. */
+export async function detectCurrentGridPage(page: Page, config: ModuleConfig): Promise<number> {
+  const inline = await readInlineGridPaging(page, config);
+  if (inline && inline.currentPage > 0) return inline.currentPage;
+
+  const paging = await readPagingFromDom(page, config);
+  if (paging) {
+    const pageSize = Math.max(1, paging.end - paging.start + 1);
+    return Math.max(1, Math.ceil(paging.end / pageSize));
+  }
+
+  const { headers, rows } = await extractGridFromDom(page, config);
+  if (rows.length === 0 || headers.length === 0) return 1;
+
+  const srKey =
+    headers.find((h) => /^sr\.?\s*no$/i.test(h.trim())) ??
+    headers.find((h) => /sr/i.test(h)) ??
+    'SrNo';
+  const firstSr = Number.parseInt(String(rows[0]?.[srKey] ?? rows[0]?.['Sr No'] ?? '1'), 10);
+  if (Number.isFinite(firstSr) && firstSr > 0) {
+    return Math.max(1, Math.ceil(firstSr / rows.length));
+  }
+
+  return 1;
 }

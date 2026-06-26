@@ -41,6 +41,26 @@ export const MODULE_SELECTOR_OVERRIDES: Record<string, PageSelectors> = {
   master_bank: {
     grid: '#ContentPlaceHolder1_GridView1, table[id*="GridView1"]',
   },
+  plot_list: {
+    grid: '#ContentPlaceHolder1_GridView1, table[id*="GridView"]',
+    searchButton:
+      '#ContentPlaceHolder1_btnSearch, input[type="submit"][value*="Search" i], input[value*="Show" i]',
+  },
+  registered_plot_list: {
+    grid: '#ContentPlaceHolder1_GridView1, table[id*="GridView"]',
+    searchButton:
+      '#ContentPlaceHolder1_btnSearch, input[type="submit"][value*="Search" i], input[value*="Show" i]',
+  },
+  govt_survey_plot: {
+    grid: '#ContentPlaceHolder1_GridView1, table[id*="GridView"]',
+    searchButton:
+      '#ContentPlaceHolder1_btnSearch, input[type="submit"][value*="Search" i], input[value*="Show" i]',
+  },
+  cash_ledger: {
+    grid: '#ContentPlaceHolder1_GridView1, table[id*="GridView"]',
+    searchButton:
+      'input[type="submit"][value*="Show" i], input[value*="Search" i], #ContentPlaceHolder1_btnShow',
+  },
   branch: {
     grid: '#ContentPlaceHolder1_GridView1, table[id*="GridView1"]',
   },

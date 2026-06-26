@@ -43,7 +43,7 @@ services:
       PLAYWRIGHT_HEADLESS: 'true'
       SCRAPER_CONCURRENCY: 3
       SCRAPER_DELAY_MS: 700
-      GENEALOGY_ENABLED: 'true'
+      GENEALOGY_ENABLED: 'false'
       STORAGE_STATE_DIR: /data/sessions
       FAILURE_HTML_DIR: /data/failures
     volumes:
@@ -69,22 +69,27 @@ services:
       ERP_BASE_URL: http://app.greencity.org.in
       PLAYWRIGHT_HEADLESS: 'true'
       SCRAPER_CONCURRENCY: 1
-      GENEALOGY_CONCURRENCY: 50
+      # Turbo: admin panel cookie + HTTP tree HTML (~8-12 BP/min per slot × slots).
+      GENEALOGY_CONCURRENCY: 8
+      GENEALOGY_ADMIN_PANEL_SLOTS: 6
+      GENEALOGY_HTTP_CONCURRENCY: 200
+      GENEALOGY_HTTP_CONNECTIONS: 300
       SCRAPER_DELAY_MS: 0
       GENEALOGY_BP_ORDER: leaf_first
-      GENEALOGY_AUTH_MODE: direct_login
+      GENEALOGY_AUTH_MODE: admin_panel
       GENEALOGY_PARALLEL_TREES: 'true'
-      GENEALOGY_PARALLEL_MODULES: 'true'
-      GENEALOGY_ENQUEUE_STAGGER_MS: 50
-      GENEALOGY_PORTAL_RETRY_ATTEMPTS: 3
-      GENEALOGY_PORTAL_RETRY_MS: 2000
+      GENEALOGY_PARALLEL_MODULES: 'false'
+      GENEALOGY_ENQUEUE_STAGGER_MS: 0
+      GENEALOGY_PORTAL_RETRY_ATTEMPTS: 2
+      GENEALOGY_PORTAL_RETRY_MS: 1000
       SCRAPER_BROWSER_POOL: 'true'
       SCRAPER_BLOCK_RESOURCES: 'true'
       SCRAPER_ADMIN_CONTEXT: 'false'
-      BP_HARVEST_QUEUE: 'true'
+      BP_HARVEST_QUEUE: 'false'
       GENEALOGY_ENABLED: 'true'
       WORKER_ROLE: genealogy
-      # Set after inspect:genealogy discovers tree XHR endpoint
+      GENEALOGY_HTTP_ONLY: 'false'
+      GENEALOGY_HTTP_HTML: 'true'
       GENEALOGY_HTTP_TREE_URL: ''
       GENEALOGY_HTTP_COOKIE: ''
       STORAGE_STATE_DIR: /data/sessions
@@ -111,6 +116,10 @@ services:
       PORT: 3010
       GENEALOGY_CONCURRENCY: 50
       BP_HARVEST_QUEUE: 'true'
+      INTEGRATION_API_KEY: ${INTEGRATION_API_KEY:-}
+      INTEGRATION_CORS_ORIGIN: ${INTEGRATION_CORS_ORIGIN:-https://mlm-erp.example.com}
+      INTEGRATION_RATE_LIMIT_POINTS: ${INTEGRATION_RATE_LIMIT_POINTS:-500}
+      INTEGRATION_RATE_LIMIT_DURATION: ${INTEGRATION_RATE_LIMIT_DURATION:-60}
     ports:
       - '3010:3010'
     depends_on:

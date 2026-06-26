@@ -1,7 +1,8 @@
 import { getSequentialAdminModules, createLogger, type ScrapeJobPayload } from '@greencity/shared';
-import { createScrapeRun, finishScrapeRun } from '@greencity/db';
+import { createScrapeRun, finishScrapeRun, countFailedRows } from '@greencity/db';
 import { runAdminModuleJob } from './runner.js';
 import { SessionManager } from './session/manager.js';
+import { checkModuleGate, retryFailedPagesForModule, runAdminModuleWithGate } from './admin-module-retry.js';
 
 const log = createLogger('sequential');
 
@@ -95,42 +96,39 @@ export async function runSequentialPortalJob(payload: ScrapeJobPayload): Promise
       }
 
       if (chunkResults.every(Boolean)) {
-        completedModules.push(mod.key);
+        const bpFailed = await countFailedRows('bp_list');
+        if (bpFailed > 0) {
+          log.warn({ failedRows: bpFailed }, 'bp_list has failed rows — retrying failed pages');
+          await retryFailedPagesForModule('bp_list', parentRunId);
+          const afterRetry = await countFailedRows('bp_list');
+          if (afterRetry > 0) {
+            failedModules.push(mod.key);
+            log.warn({ failedRows: afterRetry }, 'bp_list still has failed rows after retry');
+          } else {
+            completedModules.push(mod.key);
+          }
+        } else {
+          completedModules.push(mod.key);
+        }
       } else {
         failedModules.push(mod.key);
       }
 
-      try {
-        const { enqueueGenealogyBatchIfEnabled } = await import('./genealogy-orchestrator.js');
-        if (chunkResults.every(Boolean)) {
-          await enqueueGenealogyBatchIfEnabled(parentRunId);
-        } else {
-          log.warn('bp_list had failed chunks — genealogy batch skipped (run trigger-bp-list-remaining or trigger-genealogy manually)');
-        }
-      } catch (err) {
-        log.warn(
-          { err: err instanceof Error ? err.message : String(err) },
-          'Failed to enqueue genealogy batch after bp_list',
-        );
+      if (chunkResults.every(Boolean)) {
+        log.info('BP list chunks complete — genealogy NOT auto-started (trigger manually when ready)');
+      } else {
+        log.warn('bp_list had failed chunks — fix and resume BP list before genealogy');
       }
       continue;
     }
 
-    const childRun = await createScrapeRun({
-      moduleKey: mod.key,
-      portal: 'admin',
-      metadata: { parentRunId, navPath: mod.navPath },
-    });
-
-    try {
-      await runAdminModuleJob({ moduleKey: mod.key, portal: 'admin', runId: childRun.id });
+    const passed = await runAdminModuleWithGate(mod.key, parentRunId);
+    if (passed) {
       completedModules.push(mod.key);
-    } catch (err) {
+    } else {
       failedModules.push(mod.key);
-      log.warn(
-        { moduleKey: mod.key, err: err instanceof Error ? err.message : String(err) },
-        'Module failed in sequential run, continuing',
-      );
+      log.warn({ moduleKey: mod.key }, 'Module failed gate — stopping sequential run');
+      break;
     }
   }
 

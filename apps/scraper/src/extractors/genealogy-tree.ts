@@ -7,7 +7,7 @@ import {
   type GenealogyScrapeResult,
   type GenealogyTreeType,
 } from '@greencity/shared';
-import { fetchGenealogyViaHttp, gotoGenealogyTree, pageHasSoftPortalWarning } from '@greencity/scraper-core';
+import { fetchGenealogyViaHttp, gotoGenealogyTree, pageHasSoftPortalWarning, withExtraPage } from '@greencity/scraper-core';
 
 const log = createLogger('genealogy-tree');
 
@@ -101,11 +101,16 @@ export async function parseVisibleTreeNodes(page: Page): Promise<GenealogyNodeRe
   });
 }
 
-/** Direct children of orgchart root (first level below root node). */
-export async function parseDirectChildren(page: Page, rootBpCode: string): Promise<GenealogyNodeRef[]> {
+
+/** Binary tree: at most one LEFT and one RIGHT direct child (not full downline). */
+export async function parseBinaryDirectChildren(
+  page: Page,
+  rootBpCode: string,
+): Promise<Array<GenealogyNodeRef & { leg: 'left' | 'right' }>> {
   return page.evaluate((rootCode) => {
     const pattern = /\(([A-Za-z0-9_-]+)\)/;
-    const parseEl = (el: Element) => {
+    const parseEl = (el: Element | null) => {
+      if (!el) return null;
       const text = (el.textContent ?? '').replace(/\s+/g, ' ').trim();
       const match = text.match(pattern);
       if (!match) return null;
@@ -115,47 +120,164 @@ export async function parseDirectChildren(page: Page, rootBpCode: string): Promi
         label: text,
       };
     };
+    const parseHead = (td: Element) => {
+      const innerTable = td.querySelector(':scope > table');
+      if (innerTable) {
+        for (const tr of Array.from(innerTable.querySelectorAll('tr'))) {
+          const nodeEl = tr.querySelector('.node, td.node');
+          const parsed = parseEl(nodeEl);
+          if (parsed) return parsed;
+        }
+      }
+      return parseEl(td.querySelector(':scope .node, :scope td.node'));
+    };
+
     const orgchart = document.querySelector('.orgchart, .orgChart, [class*="orgchart"]');
     if (!orgchart) return [];
-    const allNodes = Array.from(orgchart.querySelectorAll('.node, td.node'));
-    let rootEl: Element | null = null;
-    for (const el of allNodes) {
-      const parsed = parseEl(el);
-      if (parsed && parsed.bpCode.toLowerCase() === rootCode.toLowerCase()) {
-        rootEl = el;
-        break;
-      }
-    }
-    if (!rootEl && allNodes.length > 0) rootEl = allNodes[0];
-    if (!rootEl) return [];
+
     const orgTable = orgchart.querySelector('table') ?? orgchart;
     const rows = Array.from(orgTable.querySelectorAll(':scope > tbody > tr, :scope > tr'));
+
     let rootRowIdx = -1;
-    for (let i = 0; i < rows.length; i++) {
-      if (rows[i].contains(rootEl)) {
-        rootRowIdx = i;
+    for (const el of Array.from(orgchart.querySelectorAll('.node, td.node'))) {
+      const parsed = parseEl(el);
+      if (parsed && parsed.bpCode.toLowerCase() === rootCode.toLowerCase()) {
+        const tr = el.closest('tr');
+        if (tr) rootRowIdx = rows.indexOf(tr);
         break;
       }
     }
+    if (rootRowIdx < 0 && rows.length > 0) rootRowIdx = 0;
+
+    for (let i = rootRowIdx + 1; i < rows.length; i++) {
+      const row = rows[i];
+      if (row.classList.contains('lines')) continue;
+
+      const directTds = Array.from(row.children).filter((c) => c.tagName === 'TD');
+      if (directTds.length === 0) continue;
+
+      const filled = directTds
+        .map((td, idx) => ({ idx, parsed: parseHead(td) }))
+        .filter(
+          (x): x is { idx: number; parsed: NonNullable<ReturnType<typeof parseEl>> } =>
+            x.parsed != null && x.parsed.bpCode.toLowerCase() !== rootCode.toLowerCase(),
+        );
+
+      if (filled.length === 0) continue;
+
+      const result: Array<{ bpCode: string; bpName?: string; label?: string; leg: 'left' | 'right' }> = [];
+      if (filled.length === 1) {
+        const leg = filled[0].idx < directTds.length / 2 ? 'left' : 'right';
+        result.push({ ...filled[0].parsed, leg });
+      } else {
+        result.push({ ...filled[0].parsed, leg: 'left' });
+        const right = filled[filled.length - 1];
+        if (right.parsed.bpCode.toLowerCase() !== filled[0].parsed.bpCode.toLowerCase()) {
+          result.push({ ...right.parsed, leg: 'right' });
+        }
+      }
+      return result;
+    }
+    return [];
+  }, rootBpCode);
+}
+
+/** Direct children of orgchart root (first level below root node). */
+export async function parseDirectChildren(page: Page, rootBpCode: string): Promise<GenealogyNodeRef[]> {
+  return page.evaluate((rootCode) => {
+    const pattern = /\(([A-Za-z0-9_-]+)\)/;
+    const parseEl = (el: Element | null) => {
+      if (!el) return null;
+      const text = (el.textContent ?? '').replace(/\s+/g, ' ').trim();
+      const match = text.match(pattern);
+      if (!match) return null;
+      return {
+        bpCode: match[1],
+        bpName: text.replace(match[0], '').trim() || undefined,
+        label: text,
+      };
+    };
+    const parseHead = (td: Element) => {
+      const innerTable = td.querySelector(':scope > table');
+      if (innerTable) {
+        for (const tr of Array.from(innerTable.querySelectorAll('tr'))) {
+          const nodeEl = tr.querySelector('.node, td.node');
+          const parsed = parseEl(nodeEl);
+          if (parsed) return parsed;
+        }
+      }
+      return parseEl(td.querySelector(':scope .node, :scope td.node'));
+    };
+
+    const orgchart = document.querySelector('.orgchart, .orgChart, [class*="orgchart"]');
+    if (!orgchart) return [];
+
+    const orgTable = orgchart.querySelector('table') ?? orgchart;
+    const rows = Array.from(orgTable.querySelectorAll(':scope > tbody > tr, :scope > tr'));
+
+    let rootRowIdx = -1;
+    for (const el of Array.from(orgchart.querySelectorAll('.node, td.node'))) {
+      const parsed = parseEl(el);
+      if (parsed && parsed.bpCode.toLowerCase() === rootCode.toLowerCase()) {
+        const tr = el.closest('tr');
+        if (tr) rootRowIdx = rows.indexOf(tr);
+        break;
+      }
+    }
+    if (rootRowIdx < 0 && rows.length > 0) rootRowIdx = 0;
+
     const children: { bpCode: string; bpName?: string; label?: string }[] = [];
     const seen = new Set<string>();
-    if (rootRowIdx >= 0) {
-      for (let i = rootRowIdx + 1; i < rows.length; i++) {
-        const rowNodes = rows[i].querySelectorAll('.node, td.node');
-        if (rowNodes.length === 0) continue;
-        for (const el of Array.from(rowNodes)) {
-          const parsed = parseEl(el);
-          if (!parsed) continue;
-          const key = parsed.bpCode.toLowerCase();
-          if (key === rootCode.toLowerCase() || seen.has(key)) continue;
-          seen.add(key);
-          children.push(parsed);
-        }
-        if (children.length > 0) break;
+
+    for (let i = rootRowIdx + 1; i < rows.length; i++) {
+      const row = rows[i];
+      if (row.classList.contains('lines')) continue;
+
+      const directTds = Array.from(row.children).filter((c) => c.tagName === 'TD');
+      if (directTds.length === 0) continue;
+
+      for (const td of directTds) {
+        const parsed = parseHead(td);
+        if (!parsed) continue;
+        const key = parsed.bpCode.toLowerCase();
+        if (key === rootCode.toLowerCase() || seen.has(key)) continue;
+        seen.add(key);
+        children.push(parsed);
       }
+      if (children.length > 0) break;
     }
     return children;
   }, rootBpCode);
+}
+
+function enrichModalWithLegChildren(
+  modalData: GenealogyModalData,
+  children: GenealogyNodeRef[],
+): GenealogyModalData {
+  const left = children.find((c) => c.leg === 'left');
+  const right = children.find((c) => c.leg === 'right');
+  return {
+    ...modalData,
+    leftChildBpCode: left?.bpCode ?? modalData.leftChildBpCode,
+    leftChildName: left?.bpName ?? modalData.leftChildName,
+    rightChildBpCode: right?.bpCode ?? modalData.rightChildBpCode,
+    rightChildName: right?.bpName ?? modalData.rightChildName,
+  };
+}
+
+function buildEdgesFromChildren(
+  parentBpCode: string,
+  children: GenealogyNodeRef[],
+  treeType: GenealogyTreeType,
+): GenealogyScrapeResult['edges'] {
+  return children.map((child) => ({
+    parentBpCode,
+    childBpCode: child.bpCode,
+    treeType,
+    leg:
+      child.leg ??
+      (treeType === 'sponsor' ? ('sponsor' as GenealogyLeg) : ('unknown' as GenealogyLeg)),
+  }));
 }
 
 export async function parseNodeModal(page: Page): Promise<GenealogyModalData> {
@@ -265,11 +387,12 @@ export async function scrapeGenealogyTree(
     log.debug({ treeType, rootBpCode }, 'Soft portal warning present — continuing if tree data found');
   }
   const visible = await parseVisibleTreeNodes(page);
-  const rootRef =
+  const portalRoot =
     visible.find((n) => bpCodesMatch(n.bpCode, rootBpCode)) ??
     visible[0] ??
     { bpCode: rootBpCode };
-  const clicked = await clickNodeByBpCode(page, rootRef.bpCode);
+  const portalRootCode = portalRoot.bpCode;
+  const clicked = await clickNodeByBpCode(page, portalRootCode);
   let modalData: GenealogyModalData = {};
   if (clicked) {
     await page
@@ -278,45 +401,47 @@ export async function scrapeGenealogyTree(
     modalData = await parseNodeModal(page);
     await closeNodeModal(page);
   }
-  const children = await parseDirectChildren(page, rootRef.bpCode);
+  const children =
+    treeType === 'binary'
+      ? await parseBinaryDirectChildren(page, portalRootCode)
+      : (await parseDirectChildren(page, portalRootCode)).map((c) => ({
+          ...c,
+          leg: 'sponsor' as GenealogyLeg,
+        }));
   const fallbackChildren =
-    children.length > 0 ? children : visible.filter((n) => !bpCodesMatch(n.bpCode, rootRef.bpCode));
+    children.length > 0
+      ? children
+      : treeType === 'sponsor'
+        ? (await parseVisibleTreeNodes(page))
+            .filter((n) => !bpCodesMatch(n.bpCode, portalRootCode))
+            .map((c) => ({ ...c, leg: 'sponsor' as GenealogyLeg }))
+        : [];
+  const enrichedModal = enrichModalWithLegChildren(modalData, fallbackChildren);
   const result: GenealogyScrapeResult = {
     nodes: [
       {
-        bpCode: rootRef.bpCode,
-        bpName: rootRef.bpName,
+        bpCode: rootBpCode,
+        bpName: portalRoot.bpName,
         treeType,
-        modalData,
+        modalData: enrichedModal,
         children: fallbackChildren,
       },
     ],
-    edges: fallbackChildren.map((child) => ({
-      parentBpCode: rootRef.bpCode,
-      childBpCode: child.bpCode,
-      treeType,
-      leg: inferLeg(modalData.position, treeType),
-    })),
+    edges: buildEdgesFromChildren(rootBpCode, fallbackChildren, treeType),
   };
   log.info(
     {
       treeType,
-      rootBpCode: rootRef.bpCode,
+      rootBpCode,
+      portalRootCode: portalRootCode !== rootBpCode ? portalRootCode : undefined,
       children: fallbackChildren.length,
+      leftChild: enrichedModal.leftChildBpCode,
+      rightChild: enrichedModal.rightChildBpCode,
       hasModal: !!modalData.position || !!modalData.totalMembers,
     },
     'Tree snapshot scraped',
   );
   return result;
-}
-
-function inferLeg(position: string | undefined, treeType: GenealogyTreeType): GenealogyLeg {
-  if (!position) return treeType === 'sponsor' ? 'sponsor' : 'unknown';
-  const p = position.toLowerCase();
-  if (p.includes('left')) return 'left';
-  if (p.includes('right')) return 'right';
-  if (p.includes('sponsor')) return 'sponsor';
-  return treeType === 'sponsor' ? 'sponsor' : 'unknown';
 }
 
 function mergeTreeResults(
@@ -350,18 +475,14 @@ async function scrapeBothGenealogyTreesParallel(
   page: Page,
   rootBpCode: string,
 ): Promise<GenealogyScrapeResult> {
-  const context = page.context();
-  const binaryPage = await context.newPage();
-  try {
+  return withExtraPage(page, async (binaryPage) => {
     const [sponsor, binary] = await Promise.all([
       scrapeGenealogyTree(page, 'sponsor', rootBpCode),
       scrapeGenealogyTree(binaryPage, 'binary', rootBpCode),
     ]);
     log.info({ rootBpCode, mode: 'parallel' }, 'Both genealogy trees scraped in parallel');
     return mergeTreeResults(sponsor, binary);
-  } finally {
-    if (!binaryPage.isClosed()) await binaryPage.close();
-  }
+  });
 }
 
 export async function scrapeBothGenealogyTrees(

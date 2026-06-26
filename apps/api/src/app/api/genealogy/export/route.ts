@@ -26,12 +26,49 @@ export async function GET(req: Request) {
     });
   }
 
+  type LegChild = { bpCode?: string; bpName?: string; leg?: string };
   const nodes = await prisma.genealogyNode.findMany({ orderBy: { bpCode: 'asc' } });
-  const cols = ['bpCode', 'bpName', 'uid', 'treeType', 'scrapedAt'];
+  const cols = [
+    'bpCode',
+    'bpName',
+    'uid',
+    'treeType',
+    'scrapeStatus',
+    'scrapeError',
+    'position',
+    'leftPoint',
+    'rightPoint',
+    'selfPoint',
+    'leftChildBpCode',
+    'leftChildName',
+    'rightChildBpCode',
+    'rightChildName',
+    'scrapedAt',
+  ];
   const lines = [cols.join(',')];
   for (const n of nodes) {
+    const modal = (n.modalData ?? {}) as Record<string, string | undefined>;
+    const children = (Array.isArray(n.childrenJson) ? n.childrenJson : []) as LegChild[];
+    const leftChild = children.find((c) => c.leg === 'left');
+    const rightChild = children.find((c) => c.leg === 'right');
     lines.push(
-      [n.bpCode, n.bpName ?? '', n.uid ?? '', n.treeType, n.scrapedAt.toISOString()]
+      [
+        n.bpCode,
+        n.bpName ?? '',
+        n.uid ?? '',
+        n.treeType,
+        n.scrapeStatus,
+        n.scrapeError ?? '',
+        modal.position ?? '',
+        modal.leftPoint ?? '',
+        modal.rightPoint ?? '',
+        modal.selfPoint ?? '',
+        modal.leftChildBpCode ?? leftChild?.bpCode ?? '',
+        modal.leftChildName ?? leftChild?.bpName ?? '',
+        modal.rightChildBpCode ?? rightChild?.bpCode ?? '',
+        modal.rightChildName ?? rightChild?.bpName ?? '',
+        n.scrapedAt.toISOString(),
+      ]
         .map(escapeCsvCell)
         .join(','),
     );

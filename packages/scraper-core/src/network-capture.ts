@@ -1,4 +1,4 @@
-import type { Page, Request } from 'playwright';
+import type { Page, Request, Response } from 'playwright';
 import { writeFile, mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 
@@ -17,10 +17,18 @@ export interface CapturedRequest {
 export class NetworkCapture {
   private captures: CapturedRequest[] = [];
   private phase = 'unknown';
+  private static readonly MAX_CAPTURES = 1000;
 
-  attach(page: Page): void {
-    page.on('request', (req) => void this.onRequest(req));
-    page.on('response', (res) => void this.onResponse(res.request(), res.status(), res.headers()['content-type']));
+  attach(page: Page): () => void {
+    const onRequest = (req: Request) => void this.onRequest(req);
+    const onResponse = (res: Response) =>
+      void this.onResponse(res.request(), res.status(), res.headers()['content-type']);
+    page.on('request', onRequest);
+    page.on('response', onResponse);
+    return () => {
+      page.off('request', onRequest);
+      page.off('response', onResponse);
+    };
   }
 
   setPhase(phase: string): void {
@@ -30,6 +38,7 @@ export class NetworkCapture {
   private async onRequest(req: Request): Promise<void> {
     const type = req.resourceType();
     if (type !== 'xhr' && type !== 'fetch' && req.method() !== 'POST') return;
+    if (this.captures.length >= NetworkCapture.MAX_CAPTURES) return;
     this.captures.push({
       phase: this.phase,
       url: req.url(),

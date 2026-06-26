@@ -1,14 +1,57 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { Agent, setGlobalDispatcher } from 'undici';
 import type { GenealogyLeg, GenealogyModalData, GenealogyNodeRef, GenealogyScrapeResult } from '@greencity/shared';
 import { createLogger, loadConfig } from '@greencity/shared';
 import type { CapturedRequest } from './network-capture.js';
+import {
+  buildGenealogyResultFromDtreeHtml,
+  fetchGenealogyHtmlPage,
+} from './genealogy-html-harvest.js';
+import { loginBpViaHttp } from './http-bp-login.js';
 
 const log = createLogger('http-harvest');
+
+let httpDispatcherReady = false;
+
+function ensureHttpDispatcher(): void {
+  if (httpDispatcherReady) return;
+  const connections = Number.parseInt(process.env.GENEALOGY_HTTP_CONNECTIONS ?? '200', 10);
+  setGlobalDispatcher(
+    new Agent({
+      connections: Number.isFinite(connections) ? connections : 200,
+      pipelining: 1,
+      keepAliveTimeout: 60_000,
+      keepAliveMaxTimeout: 120_000,
+    }),
+  );
+  httpDispatcherReady = true;
+}
+
+export function isHttpGenealogyHtmlEnabled(): boolean {
+  return process.env.GENEALOGY_HTTP_HTML === 'true';
+}
+
+export function isHttpGenealogyConfigured(): boolean {
+  return Boolean(process.env.GENEALOGY_HTTP_TREE_URL?.trim()) || isHttpGenealogyHtmlEnabled();
+}
+
+export function isHttpGenealogyOnly(): boolean {
+  return process.env.GENEALOGY_HTTP_ONLY === 'true' && isHttpGenealogyConfigured();
+}
+
+export function getGenealogyWorkerConcurrency(): number {
+  if (isHttpGenealogyOnly()) {
+    const http = Number.parseInt(process.env.GENEALOGY_HTTP_CONCURRENCY ?? '150', 10);
+    return Number.isFinite(http) ? http : 150;
+  }
+  return Number.parseInt(process.env.GENEALOGY_CONCURRENCY ?? '50', 10);
+}
 
 export interface HttpHarvestConfig {
   treeEndpointUrl?: string;
   cookieHeader?: string;
+  password?: string;
 }
 
 export async function cookieHeaderFromStorageState(storageStatePath: string): Promise<string | null> {
@@ -27,7 +70,13 @@ async function resolveCookieHeader(bpCode: string, config: HttpHarvestConfig): P
   if (process.env.GENEALOGY_HTTP_COOKIE) return process.env.GENEALOGY_HTTP_COOKIE;
 
   const cfg = loadConfig();
-  return cookieHeaderFromStorageState(join(cfg.storageStateDir, `bp-${bpCode}.json`));
+  const fromState = await cookieHeaderFromStorageState(join(cfg.storageStateDir, `bp-${bpCode}.json`));
+  if (fromState) return fromState;
+
+  if (config.password) {
+    return loginBpViaHttp(bpCode, config.password);
+  }
+  return null;
 }
 
 function resolveEndpointUrl(
@@ -63,8 +112,47 @@ export function suggestGenealogyHttpEndpoints(captures: CapturedRequest[]): stri
   return suggestions;
 }
 
+async function fetchGenealogyViaHttpHtml(
+  bpCode: string,
+  treeType: 'sponsor' | 'binary',
+  config: HttpHarvestConfig = {},
+): Promise<GenealogyScrapeResult | null> {
+  try {
+    ensureHttpDispatcher();
+
+    let cookie = await resolveCookieHeader(bpCode, config);
+    let html = cookie ? await fetchGenealogyHtmlPage(cookie, treeType) : null;
+
+    // Stale cached cookies often return 404 — force fresh login when password is available.
+    if (!html && config.password) {
+      cookie = await loginBpViaHttp(bpCode, config.password);
+      if (cookie) html = await fetchGenealogyHtmlPage(cookie, treeType);
+    }
+
+    if (!html) {
+      if (!cookie) log.debug({ bpCode }, 'No HTTP cookie available — HTML harvest skipped');
+      return null;
+    }
+
+    const normalized = buildGenealogyResultFromDtreeHtml(html, bpCode, treeType);
+    if (!normalized) {
+      log.warn({ bpCode, treeType }, 'HTML dtree response not recognized');
+      return null;
+    }
+
+    log.info({ bpCode, treeType, source: 'html' }, 'HTTP HTML harvest parsed');
+    return normalized;
+  } catch (err) {
+    log.warn(
+      { bpCode, treeType, err: err instanceof Error ? err.message : String(err) },
+      'HTTP HTML harvest error',
+    );
+    return null;
+  }
+}
+
 /**
- * HTTP harvest — used when GENEALOGY_HTTP_TREE_URL is configured (Phase 10).
+ * HTTP harvest — JSON endpoint (GENEALOGY_HTTP_TREE_URL) or HTML dtree (GENEALOGY_HTTP_HTML).
  * Returns null when endpoint/cookie unavailable or response cannot be parsed.
  */
 export async function fetchGenealogyViaHttp(
@@ -72,6 +160,10 @@ export async function fetchGenealogyViaHttp(
   treeType: 'sponsor' | 'binary',
   config: HttpHarvestConfig = {},
 ): Promise<GenealogyScrapeResult | null> {
+  if (isHttpGenealogyHtmlEnabled() && !resolveEndpointUrl(bpCode, treeType, config)) {
+    return fetchGenealogyViaHttpHtml(bpCode, treeType, config);
+  }
+
   const endpoint = resolveEndpointUrl(bpCode, treeType, config);
   if (!endpoint) {
     log.debug('GENEALOGY_HTTP_TREE_URL not set — HTTP harvest skipped');
@@ -85,6 +177,7 @@ export async function fetchGenealogyViaHttp(
   }
 
   try {
+    ensureHttpDispatcher();
     const res = await fetch(endpoint, {
       headers: {
         Cookie: cookie,
@@ -180,14 +273,6 @@ function extractModal(data: unknown): GenealogyModalData {
   return {};
 }
 
-function inferLeg(position: string | undefined, treeType: 'sponsor' | 'binary'): GenealogyLeg {
-  if (!position) return treeType === 'sponsor' ? 'sponsor' : 'unknown';
-  const p = position.toLowerCase();
-  if (p.includes('left')) return 'left';
-  if (p.includes('right')) return 'right';
-  if (p.includes('sponsor')) return 'sponsor';
-  return treeType === 'sponsor' ? 'sponsor' : 'unknown';
-}
 
 function normalizeHttpTreeResponse(
   bpCode: string,
@@ -196,15 +281,17 @@ function normalizeHttpTreeResponse(
 ): GenealogyScrapeResult | null {
   if (!data || typeof data !== 'object') return null;
 
-  const children = extractChildren(data);
-  const modalData = extractModal(data);
-  const rootBpCode =
-    String(
-      (data as Record<string, unknown>).bpCode ??
-        (data as Record<string, unknown>).BPCode ??
-        (data as Record<string, unknown>).rootBpCode ??
-        bpCode,
-    ) || bpCode;
+  const rawChildren = extractChildren(data);
+  const children: GenealogyNodeRef[] =
+    treeType === 'binary'
+      ? rawChildren.slice(0, 2).map((c, idx) => ({
+          ...c,
+          leg: (idx === 0 ? 'left' : 'right') as GenealogyLeg,
+        }))
+      : rawChildren.map((c) => ({ ...c, leg: 'sponsor' as GenealogyLeg }));
+
+  const modalData = enrichModalWithLegChildren(extractModal(data), children);
+  const rootBpCode = bpCode;
 
   return {
     nodes: [
@@ -219,8 +306,43 @@ function normalizeHttpTreeResponse(
       parentBpCode: rootBpCode,
       childBpCode: child.bpCode,
       treeType,
-      leg: inferLeg(modalData.position, treeType),
+      leg: child.leg ?? (treeType === 'sponsor' ? 'sponsor' : 'unknown'),
     })),
+  };
+}
+
+function enrichModalWithLegChildren(
+  modalData: GenealogyModalData,
+  children: GenealogyNodeRef[],
+): GenealogyModalData {
+  const left = children.find((c) => c.leg === 'left');
+  const right = children.find((c) => c.leg === 'right');
+  return {
+    ...modalData,
+    leftChildBpCode: left?.bpCode ?? modalData.leftChildBpCode,
+    leftChildName: left?.bpName ?? modalData.leftChildName,
+    rightChildBpCode: right?.bpCode ?? modalData.rightChildBpCode,
+    rightChildName: right?.bpName ?? modalData.rightChildName,
+  };
+}
+
+/** Sponsor + binary trees via HTTP. Returns partial result when one tree succeeds. */
+export async function fetchBothGenealogyViaHttp(
+  bpCode: string,
+  config: HttpHarvestConfig = {},
+): Promise<GenealogyScrapeResult | null> {
+  if (!isHttpGenealogyConfigured()) return null;
+
+  const [sponsor, binary] = await Promise.all([
+    fetchGenealogyViaHttp(bpCode, 'sponsor', config),
+    fetchGenealogyViaHttp(bpCode, 'binary', config),
+  ]);
+
+  if (!sponsor && !binary) return null;
+
+  return {
+    nodes: [...(sponsor?.nodes ?? []), ...(binary?.nodes ?? [])],
+    edges: [...(sponsor?.edges ?? []), ...(binary?.edges ?? [])],
   };
 }
 

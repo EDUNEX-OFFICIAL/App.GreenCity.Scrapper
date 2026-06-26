@@ -5,6 +5,8 @@ import {
   incrementGenealogyBatchProgress,
   recordScrapeFailure,
   setGenealogyBatchCurrentBp,
+  upsertFailedGenealogyNode,
+  upsertFailedModuleRow,
   upsertGenealogyResults,
 } from '@greencity/db';
 import {
@@ -76,11 +78,14 @@ export async function runBpHarvestJob(payload: BpHarvestJobPayload): Promise<voi
                   log.info({ bpCode }, 'Genealogy snapshot empty on portal — treating as valid blank BP');
                 }
                 await genealogyMetrics.time('db_upsert_ms', async () => {
+                  if (!payload.uid) {
+                    throw new Error(`BP harvest genealogy requires uid for ${bpCode}`);
+                  }
                   await upsertGenealogyResults({
                     nodes: result.genealogy!.nodes.map((node) => ({
                       bpCode: node.bpCode,
                       bpName: node.bpName ?? payload.bpName,
-                      uid: payload.uid,
+                      uid: payload.uid!,
                       treeType: node.treeType,
                       modalData: node.modalData,
                       children: node.children,
@@ -120,6 +125,24 @@ export async function runBpHarvestJob(payload: BpHarvestJobPayload): Promise<voi
       moduleKey: 'bp_harvest',
       error: message,
       htmlPath,
+    });
+    await upsertFailedGenealogyNode({
+      bpCode,
+      uid: payload.uid ?? `legacy-${bpCode}`,
+      bpName: payload.bpName,
+      scrapeRunId: run.id,
+      error: message,
+    });
+    await upsertFailedModuleRow({
+      moduleKey: 'bp_list',
+      portal: 'admin',
+      scrapeRunId: run.id,
+      identifiers: {
+        'BP ID': bpCode,
+        UID: payload.uid ?? '',
+        Name: payload.bpName ?? '',
+      },
+      error: message,
     });
     await finishScrapeRun(run.id, {
       status: 'failed',

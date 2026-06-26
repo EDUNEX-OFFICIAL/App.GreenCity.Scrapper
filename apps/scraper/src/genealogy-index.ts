@@ -1,6 +1,11 @@
 import { createLogger, loadConfig } from '@greencity/shared';
 import { disconnectPrisma } from '@greencity/db';
-import { startGenealogyWorker, shutdownGenealogyInfrastructure } from './genealogy-worker.js';
+import { closeSharedRedis } from '@greencity/queue';
+import {
+  startGenealogyWorker,
+  shutdownGenealogyInfrastructure,
+  clearGenealogyWorkerTimers,
+} from './genealogy-worker.js';
 import { startHarvestWorkerIfEnabled } from './harvest-worker.js';
 
 const log = createLogger('genealogy-main');
@@ -14,9 +19,11 @@ async function main(): Promise<void> {
 
   const shutdown = async () => {
     log.info('Genealogy worker shutting down');
+    clearGenealogyWorkerTimers();
     await genealogyWorker.close();
     if (harvestWorker) await harvestWorker.close();
     await shutdownGenealogyInfrastructure();
+    await closeSharedRedis();
     await disconnectPrisma();
     process.exit(0);
   };

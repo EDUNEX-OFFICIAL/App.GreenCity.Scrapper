@@ -9,6 +9,8 @@ import {
   registerBrowserPoolShutdown,
   shutdownAdminContext,
   isAdminContextEnabled,
+  isHttpGenealogyOnly,
+  getGenealogyWorkerConcurrency,
   AdminContextManager,
   BrowserPool,
 } from '@greencity/scraper-core';
@@ -18,17 +20,29 @@ import { runGenealogyBpJob } from './genealogy-runner.js';
 
 const log = createLogger('genealogy-worker');
 
+const genealogyWorkerTimers: ReturnType<typeof setInterval>[] = [];
+
+export function clearGenealogyWorkerTimers(): void {
+  for (const timer of genealogyWorkerTimers) clearInterval(timer);
+  genealogyWorkerTimers.length = 0;
+}
+
 export async function startGenealogyWorker(): Promise<Worker<GenealogyJobPayload>> {
   await reconcileRuns();
-  registerBrowserPoolShutdown();
 
-  if (isAdminContextEnabled()) {
-    await AdminContextManager.getInstance().getAdminPage().catch((err) => {
-      log.warn({ err: err instanceof Error ? err.message : String(err) }, 'Admin context warm-up failed');
-    });
+  const httpOnly = isHttpGenealogyOnly();
+  if (!httpOnly) {
+    registerBrowserPoolShutdown();
+    if (isAdminContextEnabled()) {
+      await AdminContextManager.getInstance().getAdminPage().catch((err) => {
+        log.warn({ err: err instanceof Error ? err.message : String(err) }, 'Admin context warm-up failed');
+      });
+    }
+  } else {
+    log.info('GENEALOGY_HTTP_ONLY=true — Playwright disabled, HTTP turbo mode');
   }
 
-  const concurrency = Number.parseInt(process.env.GENEALOGY_CONCURRENCY ?? '50', 10);
+  const concurrency = getGenealogyWorkerConcurrency();
 
   const worker = new Worker<GenealogyJobPayload>(
     GENEALOGY_QUEUE_NAME,
@@ -52,13 +66,16 @@ export async function startGenealogyWorker(): Promise<Worker<GenealogyJobPayload
   worker.on('failed', (job, err) => log.error({ jobId: job?.id, err: err.message }, 'Genealogy job failed'));
 
   await setGenealogyWorkerHeartbeat();
-  setInterval(() => setGenealogyWorkerHeartbeat().catch(() => undefined), 30_000);
+  genealogyWorkerTimers.push(
+    setInterval(() => setGenealogyWorkerHeartbeat().catch(() => undefined), 30_000),
+  );
 
-  log.info({ concurrency }, 'Genealogy worker started');
+  log.info({ concurrency, httpOnly }, 'Genealogy worker started');
   return worker;
 }
 
 export async function shutdownGenealogyInfrastructure(): Promise<void> {
+  if (isHttpGenealogyOnly()) return;
   await shutdownAdminContext();
   await BrowserPool.getInstance().shutdown().catch(() => undefined);
 }

@@ -1,28 +1,21 @@
-* { box-sizing: border-box; }
-body { font-family: system-ui, sans-serif; margin: 0; background: #f4f6f8; color: #1a1a1a; }
-.nav { display: flex; gap: 1rem; padding: 1rem 1.5rem; background: #1b5e20; }
-.nav a { color: #fff; text-decoration: none; font-weight: 500; }
-.container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
-.card { background: #fff; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
-table { width: 100%; border-collapse: collapse; }
-th, td { text-align: left; padding: .5rem .75rem; border-bottom: 1px solid #e0e0e0; font-size: .9rem; }
-th { background: #fafafa; }
-.btn { background: #2e7d32; color: #fff; border: none; padding: .4rem .8rem; border-radius: 4px; cursor: pointer; }
-.btn:hover { background: #1b5e20; }
-.btn-secondary { background: #555; }
-.btn-secondary:hover { background: #333; }
-.banner { padding: .75rem 1rem; border-radius: 6px; margin-bottom: 1rem; }
-.banner-error { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
-.banner-warn { background: #fff3e0; color: #e65100; border: 1px solid #ffcc80; }
-.banner-info { background: #e3f2fd; color: #1565c0; border: 1px solid #90caf9; }
-.banner-ok { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
-code { background: #eee; padding: .1rem .3rem; border-radius: 3px; font-size: .85em; }
-.status-completed { color: #2e7d32; }
-.status-failed { color: #c62828; }
-.status-partial { color: #ef6c00; }
-.status-running { color: #1565c0; }
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
-.stat { font-size: 1.75rem; font-weight: 700; }
-.progress-bar { height: 12px; background: #e0e0e0; border-radius: 6px; overflow: hidden; margin: .5rem 0; }
-.progress-fill { height: 100%; background: #2e7d32; transition: width .4s ease; }
-.status-pending { color: #666; }
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.container {
+  padding: 1rem 1.5rem;
+}
+
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.app-main {
+  flex: 1;
+}

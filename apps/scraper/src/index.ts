@@ -1,10 +1,13 @@
 import { createLogger, loadConfig } from '@greencity/shared';
 import { disconnectPrisma } from '@greencity/db';
+import { closeSharedRedis } from '@greencity/queue';
+import { BrowserPool, isBrowserPoolEnabled, registerBrowserPoolShutdown } from '@greencity/scraper-core';
 import {
   startWorker,
   seedModuleSchedules,
   enqueueScheduledModules,
   runBackfillOrchestrator,
+  clearWorkerTimers,
 } from './worker.js';
 
 const log = createLogger('main');
@@ -13,11 +16,12 @@ async function main(): Promise<void> {
   loadConfig();
   log.info('Green City ERP scraper starting');
 
+  registerBrowserPoolShutdown();
   await seedModuleSchedules();
   const worker = await startWorker();
 
   const cronIntervalMs = 60 * 60 * 1000;
-  setInterval(async () => {
+  const schedulerTimer = setInterval(async () => {
     try {
       const hour = new Date().getHours();
       if (hour >= 2 && hour <= 5) {
@@ -36,7 +40,13 @@ async function main(): Promise<void> {
 
   const shutdown = async () => {
     log.info('Shutting down');
+    clearInterval(schedulerTimer);
+    clearWorkerTimers();
     await worker.close();
+    if (isBrowserPoolEnabled()) {
+      await BrowserPool.getInstance().shutdown().catch(() => undefined);
+    }
+    await closeSharedRedis();
     await disconnectPrisma();
     process.exit(0);
   };

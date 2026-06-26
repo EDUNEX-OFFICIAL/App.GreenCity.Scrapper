@@ -1,21 +1,38 @@
 /** Browser-side helpers — plain JS so Playwright evaluate is not transformed by tsx/esbuild. */
 
 export function extractGridFromDomFn(table) {
-  const strip = (s) => s.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+  const strip = (s) =>
+    s
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/&nbsp;/gi, ' ')
+      .replace(/&amp;/g, '&')
+      .replace(/\s+/g, ' ')
+      .trim();
 
   const isPagerCells = (cells) => {
     const nonEmpty = cells.filter((c) => c.length > 0);
     if (nonEmpty.length === 0) return true;
+    // Plot / booking rows: RA-1001, RC-1223, etc.
+    if (nonEmpty.some((c) => /[A-Za-z]+-\d+/.test(c))) return false;
     const pagerLike = nonEmpty.filter(
-      (c) => /^\d+$/.test(c) || c === '...' || c === '>>' || c === '<<' || c === '&gt;&gt;',
+      (c) =>
+        /^\d+$/.test(c) ||
+        c === '...' ||
+        c === '>>' ||
+        c === '<<' ||
+        c === '&gt;&gt;' ||
+        />>|<</.test(c) ||
+        /^\d{6,}/.test(c),
     );
     return pagerLike.length >= nonEmpty.length * 0.7;
   };
 
   const isHeaderCells = (cells) => {
     const headerPattern =
-      /^(Sr\.?\s*No|SrNo|UID|BP ID|Name|Mobile|Sponsor|Password|Add On|Status|Current|Trans ID|Voucher|Booking|Sale ID)/i;
-    return cells.some((c) => headerPattern.test(c));
+      /^(Option|Sr\.?\s*No|SrNo|Sl\.?\s*No|SlNo|UID|BP ID|Name|Point|Plot|Mobile|Sponsor|Password|Add On|Status|Current|Trans ID|Voucher|Booking|Sale ID|Area)/i;
+    if (cells.some((c) => headerPattern.test(c))) return true;
+    const joined = cells.join(' ').toLowerCase();
+    return joined.includes('slno') && joined.includes('name');
   };
 
   const allRows = Array.from(table.querySelectorAll('tr'));
@@ -24,15 +41,26 @@ export function extractGridFromDomFn(table) {
 
   const thead = table.querySelector('thead');
   if (thead) {
-    thead.querySelectorAll('th').forEach((th) => headers.push(strip(th.innerHTML)));
+    thead.querySelectorAll('th').forEach((th) => headers.push(strip(th.textContent || '')));
+  }
+  if (headers.length > 0 && !isHeaderCells(headers)) {
+    headers.length = 0;
   }
 
   if (headers.length === 0) {
     for (let i = 0; i < allRows.length; i++) {
-      const cells = Array.from(allRows[i].querySelectorAll('th, td')).map((c) => strip(c.innerHTML));
+      const cells = Array.from(allRows[i].querySelectorAll('th, td')).map((c) => strip(c.textContent || ''));
       if (cells.length === 0 || isPagerCells(cells)) continue;
-      if (allRows[i].querySelector('th') || isHeaderCells(cells) || cells.some((c) => /[a-zA-Z]{2,}/.test(c))) {
+      if (allRows[i].querySelector('th') || isHeaderCells(cells)) {
         headers.push(...cells);
+        headerRowIndex = i;
+        break;
+      }
+    }
+  } else {
+    for (let i = 0; i < allRows.length; i++) {
+      const cells = Array.from(allRows[i].querySelectorAll('th, td')).map((c) => strip(c.textContent || ''));
+      if (allRows[i].querySelector('th') && isHeaderCells(cells)) {
         headerRowIndex = i;
         break;
       }
@@ -41,9 +69,9 @@ export function extractGridFromDomFn(table) {
 
   const rows = [];
   for (let i = 0; i < allRows.length; i++) {
-    if (i === headerRowIndex) continue;
+    if (headerRowIndex >= 0 && i <= headerRowIndex) continue;
     const tr = allRows[i];
-    const cells = Array.from(tr.querySelectorAll('td')).map((td) => strip(td.innerHTML));
+    const cells = Array.from(tr.querySelectorAll('td')).map((td) => strip(td.textContent || ''));
     if (cells.length === 0) continue;
     if (isPagerCells(cells)) continue;
 
@@ -59,6 +87,27 @@ export function extractGridFromDomFn(table) {
     });
     if (Object.values(row).some((v) => v.length > 0)) {
       rows.push(row);
+    }
+  }
+
+  if (rows.length === 0) {
+    for (let i = 0; i < allRows.length; i++) {
+      const hdrCells = Array.from(allRows[i].querySelectorAll('th, td')).map((c) => strip(c.textContent || ''));
+      if (!isHeaderCells(hdrCells)) continue;
+      for (let j = i + 1; j < allRows.length; j++) {
+        const dataCells = Array.from(allRows[j].querySelectorAll('td')).map((td) => strip(td.textContent || ''));
+        if (dataCells.length === 0 || isPagerCells(dataCells)) continue;
+        const row = {};
+        dataCells.forEach((cell, idx) => {
+          row[hdrCells[idx] || `col_${idx}`] = cell;
+        });
+        if (Object.values(row).some((v) => v.length > 0)) rows.push(row);
+      }
+      if (rows.length > 0) {
+        headers.length = 0;
+        headers.push(...hdrCells);
+        break;
+      }
     }
   }
 

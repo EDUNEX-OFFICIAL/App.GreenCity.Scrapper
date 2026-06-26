@@ -1,14 +1,12 @@
 import { createLogger, getModuleConfig } from '@greencity/shared';
 import { createScrapeRun } from '@greencity/db';
 import { runAdminModuleJob } from './runner.js';
-import { enqueueGenealogyBatchIfEnabled } from './genealogy-orchestrator.js';
 import { SessionManager } from './session/manager.js';
 
 const log = createLogger('bp-list-remaining');
 
 export const BP_LIST_REMAINING_CHUNKS = [
-  { pageStart: 601, pageEnd: 1200, label: 'B' },
-  { pageStart: 1201, pageEnd: 1769, label: 'C' },
+  { pageStart: 935, pageEnd: 1769, label: 'resume' },
 ] as const;
 
 export async function runBpListRemainingChunks(): Promise<boolean> {
@@ -61,10 +59,9 @@ export async function runBpListRemainingChunks(): Promise<boolean> {
 
   const allOk = results.every(Boolean);
   if (allOk) {
-    log.info('All remaining BP list chunks done — enqueueing genealogy batch');
-    await enqueueGenealogyBatchIfEnabled();
+    log.info('All remaining BP list chunks done — genealogy NOT auto-started (trigger manually when ready)');
   } else {
-    log.warn('Some BP list chunks failed — genealogy batch NOT started');
+    log.warn('Some BP list chunks failed — fix and resume BP list before genealogy');
   }
 
   return allOk;

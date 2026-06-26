@@ -1,15 +1,15 @@
+import { getAllAdminModules } from '@greencity/shared';
 import { LiveScrapePanel } from '../../components/LiveScrapePanel';
 
 export const dynamic = 'force-dynamic';
 
 export default function LivePage() {
+  const modules = getAllAdminModules().map((m) => ({ key: m.key, label: m.label }));
+
   return (
     <div>
-      <h1>Live Scrape</h1>
-      <p style={{ color: '#555', marginBottom: '1rem' }}>
-        Real-time portal scrape progress — BP Management &gt; BP List first, then all admin modules page by page.
-      </p>
-      <LiveScrapePanel />
+      <h1>Live</h1>
+      <LiveScrapePanel modules={modules} />
     </div>
   );
 }
